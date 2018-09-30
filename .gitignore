@@ -33,3 +33,8 @@
 
 .idea/
 .Rhistory
+cmake-build-debug/
+*.cbp
+CMakeCache.txt
+*.cmake
+CMakeFiles/
