@@ -13,10 +13,10 @@
 #ifndef CHAPTER_4_CHORE_H
 #define CHAPTER_4_CHORE_H
 
-class chore
+class ChoreManager
 {
 public:
-    chore(std::string chores_filename);
+    ChoreManager(std::string chores_filename);
 
     void add_chore(std::string new_chore);
 
@@ -30,7 +30,7 @@ public:
 
 private:
     std::vector<std::string> chores;
-
+    std::string chores_filename;
 };
 
 #endif //CHAPTER_4_CHORE_H
