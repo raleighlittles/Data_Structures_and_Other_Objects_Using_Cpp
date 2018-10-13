@@ -9,12 +9,13 @@
 #include <string>
 #include <list>
 #include <iostream>
+#include <iterator>
 
 
 class Number {
 
 public:
-    Number(int starting_number);
+    explicit Number(int starting_number);
 
     // TODO: implement operator overloads for addition, subtraction, and division?
 
@@ -27,7 +28,13 @@ public:
 
 private:
     std::list<std::string> number;
-    int16_t MAX_NUMBER_LENGTH=3;
+    static const unsigned int MAX_NUMBER_LENGTH=3;
+
+    int max_node_length()
+    { // if the maximum length of any node is X, then the largest possible node
+        // in a number is obviously just X (d-1)'s where d is the base of the number system
+        return (std::stoi(std::string(Number::MAX_NUMBER_LENGTH, '9')));
+    };
 
 };
 

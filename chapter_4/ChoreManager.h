@@ -13,8 +13,7 @@
 #ifndef CHAPTER_4_CHORE_H
 #define CHAPTER_4_CHORE_H
 
-class ChoreManager
-{
+class ChoreManager {
 public:
     ChoreManager(std::string chores_filename);
 

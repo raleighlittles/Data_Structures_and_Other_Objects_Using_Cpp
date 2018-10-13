@@ -3,6 +3,7 @@
 // Copyright (c) 2018 ${ORGANIZATION_NAME} Raleigh Littles (raleigh). All rights reserved.
 //
 
+
 #include "linked_digit_list.h"
 
 Number::Number(int starting_number)
@@ -24,6 +25,25 @@ Number::Number(int starting_number)
     }
 
     std::cout << "Created list of nodes, having size: " << this->number.size() << std::endl;
+
+}
+
+
+std::string Number::to_string()
+{
+    // iterate over the list backwards, (but still print the elements in correct order
+    std::string my_number_as_string;
+   for (auto iter = this->number.rbegin(); iter != this->number.rend(); ++iter)
+   {
+       my_number_as_string += *iter;
+   }
+
+   return my_number_as_string;
+
+}
+
+void Number::add_node(int number) {
+
 
 }
 
