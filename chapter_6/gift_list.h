@@ -11,8 +11,7 @@
 #include <string>
 #include <ostream>
 
-class GiftList
-{
+class GiftList {
 public:
     GiftList();
 
@@ -33,7 +32,6 @@ public:
 
 private:
     std::list<std::pair<std::string, std::list<std::string>>> gift_list;
-
 
 };
 
