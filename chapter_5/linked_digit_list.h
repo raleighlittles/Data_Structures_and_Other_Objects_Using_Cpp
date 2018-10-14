@@ -21,9 +21,7 @@ public:
 
     std::string to_string();
 
-
     void add_node(int number);
-
 
 
 private:

@@ -12,6 +12,7 @@ Number::Number(int starting_number)
 
     // In the case where the group of digits is less than X-characters long, prepend 0s to the digit to ensure all digit sequences in the list have the same digit length
 
+    /*
     std::string starting_number_as_string = std::to_string(starting_number);
 
     for (std::size_t index = starting_number_as_string.length(); index > 0; index -= MAX_NUMBER_LENGTH)
@@ -25,6 +26,9 @@ Number::Number(int starting_number)
         }
         this->number.push_back(current_node);
     }
+*/
+    add_node(starting_number);
+
 
     std::cout << "Created list of nodes, having size: " << this->number.size() << std::endl;
 
@@ -48,7 +52,30 @@ void Number::add_node(int number) {
 
     std::string number_as_string = std::to_string(number);
 
-    if number_as_string.length()
+    if (number_as_string.length() < MAX_NUMBER_LENGTH)
+    {
+            std::string prepended_zeros = std::string(MAX_NUMBER_LENGTH - number_as_string.length(), '0');
+            number_as_string.insert(0, prepended_zeros);
+            this->number.push_back(number_as_string);
+    }
+
+    else
+    {
+
+        for (std::size_t index = number_as_string.length(); index > 0; index -= MAX_NUMBER_LENGTH)
+        {
+            std::string current_node = number_as_string.substr(index-2, MAX_NUMBER_LENGTH);
+
+            if (current_node.length() != 3)
+            {
+                std::string prepended_zeros = std::string(current_node.length() - MAX_NUMBER_LENGTH, '0');
+                current_node.insert(0, prepended_zeros);
+            }
+            this->number.push_back(current_node);
+        }
+
+
+    }
 
 }
 
