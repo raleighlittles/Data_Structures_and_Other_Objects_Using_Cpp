@@ -15,7 +15,7 @@
 class Number {
 
 public:
-    explicit Number(int starting_number);
+    explicit Number(long starting_number);
 
     // TODO: implement operator overloads for addition, subtraction, and division?
 
@@ -23,10 +23,22 @@ public:
 
     void add_node(int number);
 
+    long compute_number() const;
+
+    Number operator+(const Number &number) const;
+
+    Number operator-(const Number &number) const;
+
+    Number operator/(const Number &number) const;
+
+    Number operator*(const Number &number) const;
+
 
 private:
-    std::list<std::string> number;
+    //std::list<std::string> number;
+    std::list<int> number;
     static const unsigned int MAX_NUMBER_LENGTH=3;
+
 
     int max_node_length()
     { // if the maximum length of any node is X, then the largest possible node
