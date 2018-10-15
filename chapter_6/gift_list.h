@@ -10,10 +10,14 @@
 #include <vector>
 #include <string>
 #include <ostream>
+#include <iostream>
+#include <set>
+#include <algorithm>
+#include <cassert>
 
 class GiftList {
 public:
-    GiftList();
+    GiftList() = default;
 
     void add_gift(std::string user, std::string gift);
 
@@ -31,7 +35,11 @@ public:
 
 
 private:
-    std::list<std::pair<std::string, std::list<std::string>>> gift_list;
+    // sets are better since they enforce
+
+    std::set<std::string> get_users_gift_list(std::string username) const;
+
+    std::set<std::pair<std::string, std::set<std::string>>> gift_list;
 
 };
 
