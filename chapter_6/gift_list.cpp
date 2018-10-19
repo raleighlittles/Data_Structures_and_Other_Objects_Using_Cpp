@@ -11,21 +11,27 @@ std::ostream &operator<<(std::ostream &os, const GiftList &list) {
 }
 
 
-std::set<std::string> GiftList::get_users_gift_list(std::string username) const
+std::set<std::string> GiftList::get_users_gift_list(std::string username)
 {
-    auto users_list_pair = std::find_if(gift_list.begin(), gift_list.end(),
-                                        [username](std::pair<std::string, std::set<std::string>> const &pairs) {
-                                            return pairs.first == username;
-                                        });
+    std::string _username = username;
 
-    return users_list_pair->second;
+   auto pos = std::find_if(gift_list.begin(), gift_list.end(), [_username](std::pair<std::string, std::set<std::string>> const &pair) {
+           return (pair.first == _username);
+       }
+   );
+
+   return pos;
+
 }
 
 void GiftList::add_gift(std::string user, std::string gift) {
 
-    std::set<std::string> users_gift_set = get_users_gift_list(user);
+    if (get_users_gift_list(user) == gift_list.end())
+    {
+        // make pair with user, and an empty set
+        // add gift to set
+    }
 
-    auto ret = users_gift_set.insert(gift);
 
 }
 
@@ -79,7 +85,7 @@ void GiftList::delete_user(std::string user) {
 
 }
 
-void GiftList::list_users(std::string user) {
+void GiftList::list_users() {
 
     for (auto user_it = gift_list.begin(); user_it != gift_list.end(); user_it++)
     {

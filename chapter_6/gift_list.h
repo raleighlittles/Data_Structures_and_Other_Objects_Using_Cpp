@@ -3,9 +3,6 @@
 // Copyright (c) 2018 ${ORGANIZATION_NAME} Raleigh Littles (raleigh). All rights reserved.
 //
 
-#ifndef CHAPTER_6_GIFT_LIST_H
-#define CHAPTER_6_GIFT_LIST_H
-
 #include <list>
 #include <vector>
 #include <string>
@@ -15,9 +12,12 @@
 #include <algorithm>
 #include <cassert>
 
+#ifndef CHAPTER_6_GIFT_LIST_H
+#define CHAPTER_6_GIFT_LIST_H
+
 class GiftList {
 public:
-    GiftList() = default;
+    GiftList(){};
 
     void add_gift(std::string user, std::string gift);
 
@@ -31,13 +31,13 @@ public:
 
     void delete_user(std::string user);
 
-    void list_users(std::string user);
+    void list_users();
 
 
 private:
     // sets are better since they enforce
 
-    std::set<std::string> get_users_gift_list(std::string username) const;
+    std::set<std::string> get_users_gift_list(std::string username);
 
     std::set<std::pair<std::string, std::set<std::string>>> gift_list;
 

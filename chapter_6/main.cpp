@@ -2,6 +2,11 @@
 #include "gift_list.h"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
+
+    GiftList my_gl = GiftList();
+
+    my_gl.add_gift("raleigh", "monitor");
+
+    my_gl.list_users();
+
 }
