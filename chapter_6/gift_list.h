@@ -11,13 +11,15 @@
 #include <set>
 #include <algorithm>
 #include <cassert>
+#include <map>
+
 
 #ifndef CHAPTER_6_GIFT_LIST_H
 #define CHAPTER_6_GIFT_LIST_H
 
 class GiftList {
 public:
-    GiftList(){};
+    GiftList() {};
 
     void add_gift(std::string user, std::string gift);
 
@@ -25,21 +27,13 @@ public:
 
     void list_gifts(std::string user);
 
-    friend std::ostream &operator<<(std::ostream &os, const GiftList &list);
-
-    void add_user(std::string user);
-
     void delete_user(std::string user);
 
     void list_users();
 
-
 private:
-    // sets are better since they enforce
 
-    std::set<std::string> get_users_gift_list(std::string username);
-
-    std::set<std::pair<std::string, std::set<std::string>>> gift_list;
+    std::map<std::string, std::set<std::string>> gift_list;
 
 };
 
