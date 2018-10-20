@@ -3,4 +3,4 @@ project(chapter_7)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(chapter_7 main.cpp postfix_parser.h)
+add_executable(chapter_7 main.cpp postfix_parser.hpp infix_parser.hpp)
