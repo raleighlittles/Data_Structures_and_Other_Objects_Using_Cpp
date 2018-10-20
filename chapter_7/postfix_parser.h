@@ -14,6 +14,8 @@
 #include <array>
 #include <sstream>
 #include <algorithm>
+#include <iostream>
+#include <cassert>
 
 class PostfixParser {
 
@@ -36,8 +38,7 @@ public:
          *
          * 3. at this point, the stack contains one number, which is the value of the expression
          * */
-    double parse_postfix_expression(std::string expression)
-    {
+    static double parse_postfix_expression(const std::string &expression) {
         std::vector<std::string> splitted_results;
 
         std::array<std::string, 4> possible_operators = {"+", "-", "*", "/"};
@@ -46,29 +47,47 @@ public:
 
         std::istringstream string_stream(expression);
 
-        for (std::string ch; string_stream >> ch; )
-        {
-            if (std::find(possible_operators.begin(), possible_operators.end(), ch) != possible_operators.end())
-            {
+        for (std::string ch; string_stream >> ch;) {
+            if (std::find(possible_operators.begin(), possible_operators.end(), ch) != possible_operators.end()) {
                 // all operators are binary operators, so they require two operands
 
-                // What happens if you do top() off an empty stack...?
-                double operand_1 = expression_stack.top();
-            }
+                if (expression_stack.size() >= 2) {
 
-            else
-            {
+                    double operand1 = expression_stack.top();
+                    expression_stack.pop();
+
+                    double operand2 = expression_stack.top();
+                    expression_stack.pop();
+
+                    // C++ doesn't have reflection, which would make this a lot easier, and case statements don't support strings..
+
+                    double result;
+
+                    if (ch == "+") {
+                        result = operand2 + operand1;
+
+                    } else if (ch == "*") {
+                        result = operand2 * operand1;
+                    } else if (ch == "-") {
+                        result = operand2 - operand1;
+                    } else if (ch == "/") {
+                        result = operand2 / operand1;
+                    } else {
+                        std::cout << "The operation you entered ( " << ch << ") is not supported." << std::endl;
+                        exit(1);
+                    }
+
+                    expression_stack.push(result);
+                }
+            } else {
                 expression_stack.push(std::stod(ch));
             }
         }
-    }
 
-private:
-    // cant use vectors here because vectors have dynamic allocation, and you cant use dynamic allocation with the constexpr type
-    /*
-    std::array<std::string, 4> possible_operators = {"+", "-", "*", "/"};
-    std::stack<double> expression_stack;
-     */
+        assert(expression_stack.size() == 1);
+
+        return expression_stack.top();
+    }
 
 };
 
