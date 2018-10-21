@@ -20,7 +20,6 @@
 class PostfixParser {
 
 public:
-
     /* Psuedo-code algorithm (Figure 7.10, page 380)
          * ----------------------------------------------
          * 1. Initialize a stack of double numbers
@@ -38,7 +37,8 @@ public:
          *
          * 3. at this point, the stack contains one number, which is the value of the expression
          * */
-    static double parse_postfix_expression(const std::string &expression) {
+    static double parse_postfix_expression(const std::string &expression)
+    {
         std::vector<std::string> splitted_results;
 
         std::array<std::string, 4> possible_operators = {"+", "-", "*", "/"};
@@ -60,7 +60,6 @@ public:
                     expression_stack.pop();
 
                     // C++ doesn't have reflection, which would make this a lot easier, and case statements don't support strings..
-
                     double result;
 
                     if (ch == "+") {

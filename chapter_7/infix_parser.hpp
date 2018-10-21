@@ -38,7 +38,8 @@ public:
      *          parenthesis so print an error message and halt.
      *      }
      */
-    static double convert_infix_to_postfix(std::string& expression) {
+    static double convert_infix_to_postfix(std::string& expression)
+    {
 
     }
 
