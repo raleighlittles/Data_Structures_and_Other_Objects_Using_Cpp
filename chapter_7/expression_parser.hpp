@@ -41,7 +41,7 @@ public:
     {
         //std::vector<std::string> splitted_results;
 
-        ExpressionParser::possible_operators = {"+", "-", "/", "*"};
+        std::array<std::string, 4> possible_operators = {"+", "-", "/", "*"};
 
         std::stack<double> expression_stack;
 
@@ -88,9 +88,11 @@ public:
         return expression_stack.top();
     }
 
+    /*
     static std::array<std::string, 4> possible_operators;
     static std::array<std::string, 3> possible_left_delimeters;
     static std::array<std::string, 3> possible_right_delimeters;
+     */
 
 
     /* Psuedo-code algorithm (Figure 7.11, page 382)
@@ -117,15 +119,15 @@ public:
      *          parenthesis so print an error message and halt.
      *      }
      */
-    static std::string convert_infix_to_postfix(std::string& infix_expression)
+    static std::string convert_infix_to_postfix(const std::string& infix_expression)
     {
         std::string postfix_expression;
 
-        ExpressionParser::possible_operators = {"+", "-", "/", "*"};
+        std::array<std::string, 4> possible_operators = {"+", "-", "/", "*"};
 
-        ExpressionParser::possible_left_delimeters = {"(", "{", "["};
+        std::array<std::string, 3> possible_left_delimeters = {"(", "{", "["};
 
-        ExpressionParser::possible_right_delimeters = {")", "}", "]"};
+        std::array<std::string, 3> possible_right_delimeters = {")", "}", "]"};
 
         std::stack<std::string> expression_stack;
 
@@ -136,21 +138,29 @@ public:
 
             if (std::find(possible_left_delimeters.begin(), possible_left_delimeters.end(), ch) != possible_left_delimeters.end())
             {
+                std::cout << 1 << std::endl;
+                std::cout << "ch: " << ch << std::endl;
                 expression_stack.push(ch);
             }
 
-            else if (std::all_of(ch.begin(), ch.end(), isdigit))
+            else if (std::all_of(ch.begin(), ch.end(), ::isalnum))
             {
+                std::cout << 2 << std::endl;
+                std::cout << "ch: " << ch << std::endl;
                 postfix_expression += ch;
             }
 
             else if (std::find(possible_operators.begin(), possible_operators.end(), ch) != possible_operators.end())
             {
+                std::cout << 3 << std::endl;
+                std::cout << "ch: " << ch << std::endl;
                 expression_stack.push(ch);
             }
 
             else
             {
+                std::cout << 4 << std::endl;
+                std::cout << "ch: " << ch << std::endl;
                 // next symbol should be a right parenthesis
                 assert(std::find(possible_right_delimeters.begin(), possible_right_delimeters.end(), ch) != possible_right_delimeters.end());
 
@@ -160,7 +170,7 @@ public:
                     // operation symbol should be on the top of the stack!
                     assert(std::find(possible_operators.begin(), possible_operators.end(), expression_stack.top()) != possible_operators.end());
 
-                    postfix_expression += ch;
+                    postfix_expression += expression_stack.top();
 
                     expression_stack.pop();
 
@@ -169,12 +179,11 @@ public:
                     assert(std::find(possible_left_delimeters.begin(), possible_left_delimeters.end(), expression_stack.top()));
 
                     expression_stack.pop();
-
             }
 
         }
 
-        assert(expression_stack.size() == 0);
+        assert(expression_stack.empty() == false);
 
         return postfix_expression;
 
