@@ -168,9 +168,7 @@ public:
                     expression_stack.pop();
                 }
 
-                while (!expression_stack.empty() | is_left_delimeter(possible_left_delimeters) |
-                        // how the fuck am i gonna figure out the precendence of an operator? //
-                        )
+                while (!expression_stack.empty() | is_left_delimeter(possible_left_delimeters, ch) | ( is_operator(possible_operators, ch) && operator_of_highest_precedence?)
 
             }
 
@@ -178,9 +176,14 @@ public:
 
     }
 
-    static bool is_left_delimeter(std::array<std::string, 4> left_delimeters, std::string character)
+    static bool is_left_delimeter(std::array<std::string, 3> left_delimeters, std::string character)
     {
         return (std::find(left_delimeters.begin(), left_delimeters.end(), character) != left_delimeters.end());
+    }
+
+    static bool is_operator(std::array<std::string, 4> operators, std::string character)
+    {
+        return (std::find(operators.begin(), operators.end(), character) != operators.end());
     }
 
 };
