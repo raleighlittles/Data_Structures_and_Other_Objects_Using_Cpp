@@ -12,8 +12,7 @@ int main() {
 
     std::cout << "----------------------" << std::endl;
 
-
-    const std::string example_infix_expression = "( ( ( 3 + 7 ) * ( 4 / 6 ) ) - ( 2 * 6 ) )";
+    const std::string example_infix_expression = "( ( ( A + 7 ) * ( B / C ) ) - ( 2 * D ) )";
 
     std::string postfix_expression = ExpressionParser::convert_infix_to_postfix(example_infix_expression);
 

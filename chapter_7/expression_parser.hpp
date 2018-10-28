@@ -123,7 +123,7 @@ public:
     {
         std::string postfix_expression;
 
-        std::array<std::string, 4> possible_operators = {"+", "-", "/", "*"};
+        std::array<std::string, 4> possible_operators = {"/","*","-","+"};
 
         std::array<std::string, 3> possible_left_delimeters = {"(", "{", "["};
 
@@ -138,34 +138,23 @@ public:
 
             if (std::find(possible_left_delimeters.begin(), possible_left_delimeters.end(), ch) != possible_left_delimeters.end())
             {
-                std::cout << 1 << std::endl;
-                std::cout << "ch: " << ch << std::endl;
                 expression_stack.push(ch);
             }
 
             else if (std::all_of(ch.begin(), ch.end(), ::isalnum))
             {
-                std::cout << 2 << std::endl;
-                std::cout << "ch: " << ch << std::endl;
                 postfix_expression += ch;
             }
 
             else if (std::find(possible_operators.begin(), possible_operators.end(), ch) != possible_operators.end())
             {
-                std::cout << 3 << std::endl;
-                std::cout << "ch: " << ch << std::endl;
                 expression_stack.push(ch);
             }
 
             else
             {
-                std::cout << 4 << std::endl;
-                std::cout << "ch: " << ch << std::endl;
                 // next symbol should be a right parenthesis
                 assert(std::find(possible_right_delimeters.begin(), possible_right_delimeters.end(), ch) != possible_right_delimeters.end());
-
-                    // skip the current character
-                    string_stream >> ch;
 
                     // operation symbol should be on the top of the stack!
                     assert(std::find(possible_operators.begin(), possible_operators.end(), expression_stack.top()) != possible_operators.end());
@@ -175,15 +164,12 @@ public:
                     expression_stack.pop();
 
                     // after the operation symbol got popped, there should be a left parenthesis on the top
-
-                    assert(std::find(possible_left_delimeters.begin(), possible_left_delimeters.end(), expression_stack.top()));
+                    assert(std::find(possible_left_delimeters.begin(), possible_left_delimeters.end(), expression_stack.top()) != possible_left_delimeters.end());
 
                     expression_stack.pop();
             }
-
         }
-
-        assert(expression_stack.empty() == false);
+        assert(expression_stack.size() == 0);
 
         return postfix_expression;
 
