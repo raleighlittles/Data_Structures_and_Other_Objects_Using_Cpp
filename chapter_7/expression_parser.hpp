@@ -20,23 +20,7 @@
 class ExpressionParser {
 
 public:
-    /* Psuedo-code algorithm (Figure 7.10, page 380)
-         * ----------------------------------------------
-         * 1. Initialize a stack of double numbers
-         * 2. do
-         *      if (the next input is a number)
-         *          read the next input and push it into the stack
-         *
-         *      else
-         *          read the next character, which is an operation symbol
-         *          use top() and pop() to get the two numbers off the stack
-         *          combine these two numbers with the operation (using the second number popped as the left operand),
-         *          and push the result onto the stack
-         *
-         *   while (there is more of the expression to read)
-         *
-         * 3. at this point, the stack contains one number, which is the value of the expression
-         * */
+    /* See: Figure 7.10, page 380 */
     static double parse_postfix_expression(const std::string &expression)
     {
         //std::vector<std::string> splitted_results;
@@ -88,38 +72,8 @@ public:
         return expression_stack.top();
     }
 
-    /*
-    static std::array<std::string, 4> possible_operators;
-    static std::array<std::string, 3> possible_left_delimeters;
-    static std::array<std::string, 3> possible_right_delimeters;
-     */
-
-
-    /* Psuedo-code algorithm (Figure 7.11, page 382)
-     * -----------------------------------------------
-     * 1. Initialize a stack of characters to hold hte operation symbols and parentheses.
-     * 2. do
-     *      if (the next input is a left parenthesis)
-     *          Read the left parenthesis and push it onto the stack
-     *
-     *      else if (the next input is a number or other operand)
-     *          Read the operand and write it to the output
-     *
-     *      else if (the next input is one of the operation symbols)
-     *          Read the operation symbol and push it onto the stack
-     *
-     *      else
-     *      {   Read and discard the next input symbol (which should be a right parenthesis).
-     *          There should be an operation symbol on the top of the stack, so write this symbol to the output and pop
-     *          it from the stack. (If there is no such symbol, then print an
-     *          error message indicating that there were too few operations in the infix expression,
-     *          and halt.) After popping the operation symbol, there should be a left parenthesis on
-     *          the top of the stack, so pop and discard this left parenthesis.
-     *          (If there was no left parenthesis, then the input did not have balanced
-     *          parenthesis so print an error message and halt.
-     *      }
-     */
-    static std::string convert_infix_to_postfix(const std::string& infix_expression)
+    /* See: Figure 7.11, page 382 */
+    static std::string convert_parenthesized_infix_to_postfix(const std::string& parenthesized_infix_expression)
     {
         std::string postfix_expression;
 
@@ -131,7 +85,7 @@ public:
 
         std::stack<std::string> expression_stack;
 
-        std::istringstream string_stream(infix_expression);
+        std::istringstream string_stream(parenthesized_infix_expression);
 
         for (std::string ch; string_stream >> ch;)
         {
@@ -173,6 +127,60 @@ public:
 
         return postfix_expression;
 
+    }
+
+
+    /* See: Figure 7.12, page 385 */
+    static std::string convert_general_infix_to_postfix(const std::string& infix_expression)
+    {
+
+        std::string postfix_expression;
+
+        std::array<std::string, 4> possible_operators = {"/","*","-","+"};
+
+        std::array<std::string, 3> possible_left_delimeters = {"(", "{", "["};
+
+        std::array<std::string, 3> possible_right_delimeters = {")", "}", "]"};
+
+        std::stack<std::string> expression_stack;
+
+        std::istringstream string_stream(infix_expression);
+
+        for (std::string ch; string_stream >> ch; )
+        {
+
+            if (std::find(possible_left_delimeters.begin(), possible_left_delimeters.end(), ch) != possible_left_delimeters.end())
+            {
+                expression_stack.push(ch);
+            }
+
+            else if (std::all_of(ch.begin(), ch.end(), ::isalnum))
+            {
+                postfix_expression += ch;
+            }
+
+            else if (std::find(possible_operators.begin(), possible_operators.end(), ch) != possible_operators.end())
+            {
+
+                do
+                {
+                    postfix_expression += expression_stack.top();
+                    expression_stack.pop();
+                }
+
+                while (!expression_stack.empty() | is_left_delimeter(possible_left_delimeters) |
+                        // how the fuck am i gonna figure out the precendence of an operator? //
+                        )
+
+            }
+
+        }
+
+    }
+
+    static bool is_left_delimeter(std::array<std::string, 4> left_delimeters, std::string character)
+    {
+        return (std::find(left_delimeters.begin(), left_delimeters.end(), character) != left_delimeters.end());
     }
 
 };
