@@ -16,6 +16,7 @@
 #include <algorithm>
 #include <iostream>
 #include <cassert>
+#include <map>
 
 class ExpressionParser {
 
@@ -138,6 +139,8 @@ public:
 
         std::array<std::string, 4> possible_operators = {"/","*","-","+"};
 
+        std::map<std::string, int> operands_priority = {{"+", 1}, {"-", 1}, {"*", 2},{ "/", 2}};
+
         std::array<std::string, 3> possible_left_delimeters = {"(", "{", "["};
 
         std::array<std::string, 3> possible_right_delimeters = {")", "}", "]"};
@@ -168,11 +171,24 @@ public:
                     expression_stack.pop();
                 }
 
-                while (!expression_stack.empty() | is_left_delimeter(possible_left_delimeters, ch) | ( is_operator(possible_operators, ch) && operator_of_highest_precedence?)
+                while (!expression_stack.empty() | is_left_delimeter(possible_left_delimeters, ch) | ( is_operator(possible_operators, ch) && /* "next input symbol on the stack is an operation with a lower precendence than the next input symbol */))
+
+                expression_stack.push(ch);
 
             }
 
-        }
+            else
+            {
+                /*
+                 * Read and discard the next input symbol (which should be a right parenthesis).
+Print the top operation and pop it; keep printing and popping until the next
+symbol on the stack is a left parenthesis. (If no left parenthesis is encountered, then
+print an error message indicating unbalanced parentheses, and halt.) Finally, pop
+the left parenthesis.
+                 */
+            }
+
+
 
     }
 
