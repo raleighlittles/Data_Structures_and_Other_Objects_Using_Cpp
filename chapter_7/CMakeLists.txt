@@ -3,4 +3,4 @@ project(chapter_7)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(chapter_7 main.cpp expression_parser.hpp)
+add_executable(chapter_7 main.cpp expression_parser.cpp expression_parser.h)
