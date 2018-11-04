@@ -139,7 +139,7 @@ std::string ExpressionParser::convert_parenthesized_infix_to_postfix(
 }
 
 std::string ExpressionParser::convert_general_infix_to_postfix(const std::string &infix_expression) {
-    std::string postfix_expression;
+    std::string postfix_expression = "";
 
     std::array<std::string, 4> possible_operators = {"/", "*", "-", "+"};
 
@@ -155,12 +155,13 @@ std::string ExpressionParser::convert_general_infix_to_postfix(const std::string
             postfix_expression += ch;
         } else if (is_operator(ch)) {
 
+           /* failing because the stack is empty at this point.. */ 
             do {
                 postfix_expression += expression_stack.top();
                 expression_stack.pop();
-            } while (!expression_stack.empty() |
-                     is_left_delimeter(expression_stack.top()) |
-                     (is_operator(expression_stack.top()) && is_lower_precedence(expression_stack.top(), ch)));
+            } while (!expression_stack.empty() &&
+                     !is_left_delimeter(expression_stack.top()) &&
+                     !(is_operator(expression_stack.top()) && is_lower_precedence(expression_stack.top(), ch)));
 
 
             expression_stack.push(ch);
