@@ -134,16 +134,9 @@ public:
     /* See: Figure 7.12, page 385 */
     static std::string convert_general_infix_to_postfix(const std::string& infix_expression)
     {
-
         std::string postfix_expression;
 
         std::array<std::string, 4> possible_operators = {"/","*","-","+"};
-
-        std::map<std::string, int> operands_priority = {{"+", 1}, {"-", 1}, {"*", 2},{ "/", 2}};
-
-        std::array<std::string, 3> possible_left_delimeters = {"(", "{", "["};
-
-        std::array<std::string, 3> possible_right_delimeters = {")", "}", "]"};
 
         std::stack<std::string> expression_stack;
 
@@ -152,7 +145,7 @@ public:
         for (std::string ch; string_stream >> ch; )
         {
 
-            if (std::find(possible_left_delimeters.begin(), possible_left_delimeters.end(), ch) != possible_left_delimeters.end())
+            if (is_left_delimeter(ch))
             {
                 expression_stack.push(ch);
             }
@@ -162,7 +155,7 @@ public:
                 postfix_expression += ch;
             }
 
-            else if (std::find(possible_operators.begin(), possible_operators.end(), ch) != possible_operators.end())
+            else if (is_operator(ch))
             {
 
                 do
@@ -171,7 +164,10 @@ public:
                     expression_stack.pop();
                 }
 
-                while (!expression_stack.empty() | is_left_delimeter(possible_left_delimeters, ch) | ( is_operator(possible_operators, ch) && /* "next input symbol on the stack is an operation with a lower precendence than the next input symbol */))
+                while (!expression_stack.empty() |
+                is_left_delimeter(expression_stack.top()) |
+                ( is_operator(expression_stack.top()) &&  is_lower_precedence(expression_stack.top(), ch)))
+
 
                 expression_stack.push(ch);
 
@@ -179,27 +175,76 @@ public:
 
             else
             {
-                /*
-                 * Read and discard the next input symbol (which should be a right parenthesis).
-Print the top operation and pop it; keep printing and popping until the next
-symbol on the stack is a left parenthesis. (If no left parenthesis is encountered, then
-print an error message indicating unbalanced parentheses, and halt.) Finally, pop
-the left parenthesis.
-                 */
+                assert(is_right_delimeter(ch));
+
+                postfix_expression += expression_stack.top();
+
+                expression_stack.pop();
+
+                bool lparenthensis_seen = false;
+
+                if (!is_left_delimeter(expression_stack.top()))
+                {
+                    postfix_expression += expression_stack.top();
+                    expression_stack.pop();
+                }
+
+                else
+                {
+                    lparenthensis_seen = true;
+
+                }
+
+                // you should have seen a left parenthesis by now
+                assert(lparenthensis_seen == true);
+
+                // now that you've seen the left parenthesis, pop it
+
+                expression_stack.pop();
+
             }
 
 
+    }
+
+
+    // print and pop any remaining operations on the stack. There should be no remaining left parenthesesis
 
     }
 
-    static bool is_left_delimeter(std::array<std::string, 3> left_delimeters, std::string character)
+   static std::map<std::string, int> operators;
+
+    static std::array<std::string, 3> possible_right_delimeters;
+
+    static std::array<std::string, 3> possible_left_delimeters;
+
+    static bool is_right_delimeter(std::string character)
     {
-        return (std::find(left_delimeters.begin(), left_delimeters.end(), character) != left_delimeters.end());
+        ExpressionParser::possible_right_delimeters = {")", "}", "]"};
+
+        return (std::find(possible_right_delimeters.begin(), possible_right_delimeters.end(), character) != possible_right_delimeters.end());
     }
 
-    static bool is_operator(std::array<std::string, 4> operators, std::string character)
+
+     static bool is_left_delimeter(std::string character)
     {
+        ExpressionParser::possible_left_delimeters = {"(", "{", "["};
+
+        return (std::find(possible_left_delimeters.begin(), possible_left_delimeters.end(), character) != possible_left_delimeters.end());
+    }
+
+    /* TODO: Combine this and the method below into one method */
+    static bool is_operator(std::string character)
+    {
+        std::array<std::string, 4> operators = {"+", "-", "/", "*"};
         return (std::find(operators.begin(), operators.end(), character) != operators.end());
+    }
+
+    /* Is operator 1 a lower precedence than the 2nd operator? */
+    static bool is_lower_precedence(std::string operator1, std::string operator2)
+    {
+         ExpressionParser::operators = {{"+", 1}, {"-", 1}, {"*", 2},{ "/", 2}};
+         return (operators.find(operator1)->second < operators.find(operator2)->second);
     }
 
 };
