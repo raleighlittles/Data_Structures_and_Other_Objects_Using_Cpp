@@ -25,12 +25,12 @@ public:
 
     static std::array<std::string, 3> possible_left_delimeters;
 
-    static bool is_right_delimeter(const std::string &character);
+    static bool is_right_delimeter( std::string character);
 
-    static bool is_left_delimeter(const std::string &character);
+    static bool is_left_delimeter( std::string character);
 
     /* TODO: Combine this and the method below into one method */
-    static bool is_operator(const std::string &character);
+    static bool is_operator( std::string character);
 
     /* Is operator 1 a lower precedence than the 2nd operator? */
     static bool is_lower_precedence(const std::string &operator1, const std::string &operator2);

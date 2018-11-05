@@ -13,7 +13,7 @@ std::map<std::string, int> ExpressionParser::operators = {{"+", 1},
                                                           {"*", 2},
                                                           {"/", 2}};
 
-bool ExpressionParser::is_right_delimeter(const std::string &character) {
+bool ExpressionParser::is_right_delimeter(const std::string character) {
 
     return (std::find(ExpressionParser::possible_right_delimeters.begin(),
                       ExpressionParser::possible_right_delimeters.end(), character) !=
@@ -21,14 +21,14 @@ bool ExpressionParser::is_right_delimeter(const std::string &character) {
 
 }
 
-bool ExpressionParser::is_left_delimeter(const std::string &character) {
+bool ExpressionParser::is_left_delimeter(const std::string character) {
 
     return (std::find(ExpressionParser::possible_left_delimeters.begin(),
                       ExpressionParser::possible_left_delimeters.end(), character) !=
             ExpressionParser::possible_left_delimeters.end());
 }
 
-bool ExpressionParser::is_operator(const std::string &character) {
+bool ExpressionParser::is_operator(const std::string character) {
     std::array<std::string, 4> operators = {"+", "-", "/", "*"};
     return (std::find(operators.begin(), operators.end(), character) != operators.end());
 
@@ -49,7 +49,7 @@ double ExpressionParser::parse_postfix_expression(const std::string &expression)
     std::istringstream string_stream(expression);
 
     for (std::string ch; string_stream >> ch;) {
-        if (std::find(possible_operators.begin(), possible_operators.end(), ch) != possible_operators.end()) {
+        if (is_operator(ch)) {
             // all operators are binary operators, so they require two operands
 
             if (expression_stack.size() >= 2) {
@@ -105,44 +105,36 @@ std::string ExpressionParser::convert_parenthesized_infix_to_postfix(
 
     for (std::string ch; string_stream >> ch;) {
 
-        if (std::find(possible_left_delimeters.begin(), possible_left_delimeters.end(), ch) !=
-            possible_left_delimeters.end()) {
+        if (is_left_delimeter(ch)) {
             expression_stack.push(ch);
         } else if (std::all_of(ch.begin(), ch.end(), ::isalnum)) {
             postfix_expression += ch;
-        } else if (std::find(possible_operators.begin(), possible_operators.end(), ch) !=
-                   possible_operators.end()) {
+        } else if (is_operator(ch)) {
             expression_stack.push(ch);
         } else {
             // next symbol should be a right parenthesis
-            assert(std::find(possible_right_delimeters.begin(), possible_right_delimeters.end(), ch) !=
-                   possible_right_delimeters.end());
+            assert(is_right_delimeter(ch));
 
             // operation symbol should be on the top of the stack!
-            assert(std::find(possible_operators.begin(), possible_operators.end(), expression_stack.top()) !=
-                   possible_operators.end());
+            assert(is_operator(expression_stack.top()));
 
             postfix_expression += expression_stack.top();
 
             expression_stack.pop();
 
             // after the operation symbol got popped, there should be a left parenthesis on the top
-            assert(std::find(possible_left_delimeters.begin(), possible_left_delimeters.end(),
-                             expression_stack.top()) != possible_left_delimeters.end());
 
+            assert(is_left_delimeter(expression_stack.top()));
             expression_stack.pop();
         }
     }
-    assert(expression_stack.size() == 0);
+    assert(expression_stack.empty());
 
     return postfix_expression;
 }
 
 std::string ExpressionParser::convert_general_infix_to_postfix(const std::string &infix_expression) {
-    std::string postfix_expression = "";
-
-    std::array<std::string, 4> possible_operators = {"/", "*", "-", "+"};
-
+    std::string postfix_expression;
     std::stack<std::string> expression_stack;
 
     std::istringstream string_stream(infix_expression);
@@ -155,14 +147,12 @@ std::string ExpressionParser::convert_general_infix_to_postfix(const std::string
             postfix_expression += ch;
         } else if (is_operator(ch)) {
 
-           /* failing because the stack is empty at this point.. */ 
-            do {
+            while (!expression_stack.empty() &&
+                   !is_left_delimeter(expression_stack.top()) &&
+                   !(is_operator(expression_stack.top()) && is_lower_precedence(expression_stack.top(), ch))) {
                 postfix_expression += expression_stack.top();
                 expression_stack.pop();
-            } while (!expression_stack.empty() &&
-                     !is_left_delimeter(expression_stack.top()) &&
-                     !(is_operator(expression_stack.top()) && is_lower_precedence(expression_stack.top(), ch)));
-
+            }
 
             expression_stack.push(ch);
 
@@ -172,31 +162,31 @@ std::string ExpressionParser::convert_general_infix_to_postfix(const std::string
             postfix_expression += expression_stack.top();
             expression_stack.pop();
 
-            bool lparenthensis_seen = false;
+            uint8_t count = 0;
 
-            if (!is_left_delimeter(expression_stack.top())) {
+            // keep printing and popping until the next symbol on the stack is a left parenthesis
+
+            while ((expression_stack.empty() == false) and (is_left_delimeter(expression_stack.top()) == false)) {
                 postfix_expression += expression_stack.top();
                 expression_stack.pop();
-
-            } else {
-                lparenthensis_seen = true;
-
             }
 
-            // you should have seen a left parenthesis by now
-            assert(lparenthensis_seen);
-            // now that you've seen the left parenthesis, pop it
+            assert(is_left_delimeter(expression_stack.top()));
+
+            // now pop that left parenthesis
             expression_stack.pop();
+
+
         }
     }
 
-    while (!expression_stack.empty()) {
+    while (expression_stack.empty() == false) {
+        // there should be no remaining left parenthesis on the stack now, if there are then the expression was not balanced
         assert(is_left_delimeter(expression_stack.top()) == false);
 
         postfix_expression += expression_stack.top();
 
         expression_stack.pop();
-
     }
 
     return postfix_expression;
