@@ -6,8 +6,9 @@
 #define CHAPTER_8_STORE_QUEUE_H
 
 #include <queue>
+#include <random>
 
-class StoreQueue
+class StoreCheckout
 {
     // Problem description
     /*
@@ -17,10 +18,10 @@ the car wash simulation, except that there
 are multiple queues instead of one. You might use a
 vector of queues to simulate the lines. Assume that
 there are five cashier lines at the grocery store. Cus-
-tomers enter randomly to check out, and then enter
-the shortest line. If the lines are equal, then the first
 available line is chosen. Each transaction takes a
 random amount of time to complete.
+tomers enter randomly to check out, and then enter
+the shortest line. If the lines are equal, then the first
 For additional work, expand the grocery line pro-
 gram to allow shoppers to:
 • Avoid a line if all lines are a certain length
@@ -30,6 +31,20 @@ tain time
 time intervals
 • Switch lines if another line is shorter
      */
+
+public:
+    StoreCheckout(unsigned int num_of_lines,
+            unsigned int max_wait_per_customer);
+
+    void simulate_passage_of_time(unsigned int seconds);
+
+private:
+    void switch_line(unsigned int starting_line, unsigned int ending_line);
+
+    std::vector <std::queue<long>> checkout_system;
+    const unsigned int MAX_WAIT_PER_CUSTOMER;
+
+
 };
 
 #endif //CHAPTER_8_STORE_QUEUE_H
