@@ -5,8 +5,11 @@
 #ifndef CHAPTER_8_STORE_QUEUE_H
 #define CHAPTER_8_STORE_QUEUE_H
 
-#include <queue>
+#include <deque>
 #include <random>
+#include <algorithm>
+#include <random>
+#include <iostream>
 
 class StoreCheckout
 {
@@ -39,12 +42,17 @@ public:
     void simulate_passage_of_time(unsigned int seconds);
 
 private:
-    void switch_line(unsigned int starting_line, unsigned int ending_line);
+    //void switch_line(unsigned int starting_line, unsigned int ending_line);
 
-    std::vector <std::queue<long>> checkout_system;
+    // use a deque only because it supports iteration, while regular queues do not
+    std::vector <std::deque<long>> checkout_system;
     const unsigned int MAX_WAIT_PER_CUSTOMER;
 
+    void increment_all_times();
 
+    bool get_random_boolean();
+
+    void print_lines_status();
 };
 
 #endif //CHAPTER_8_STORE_QUEUE_H
