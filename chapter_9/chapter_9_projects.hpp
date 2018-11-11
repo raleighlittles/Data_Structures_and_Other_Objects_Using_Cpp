@@ -2,9 +2,14 @@
 // Created by raleigh on 11/11/18.
 //
 
-/* Problem statement, Problem #6 page 471
- *
- * The formula for computing the number of
+
+
+namespace RecursiveThinking
+{
+
+    /* Problem description, problem 6
+     *
+     * The formula for computing the number of
 ways of choosing r different things from a
 set of n things is the following:
 n !
@@ -17,14 +22,13 @@ Discover a recursive version of the C(n, r) formula
 and write a recursive C++ function that computes
 the value of the formula. Embed the function in a
 program and test it.
- */
-
-namespace RecursiveThinking
-{
-    /* Remember that the C(n, r) formula is the same as the binomial coefficient. Then, we can use Pascal's Rule:
-     C(n, r) = C(n-1, r) + C(n-1, r-1) to create a recursive implementation. */
+     */
     float recursive_combination_formula(int n, int r)
     {
+
+        /* Remember that the C(n, r) formula is the same as the binomial coefficient. Then, we can use Pascal's Rule:
+    C(n, r) = C(n-1, r) + C(n-1, r-1) to create a recursive implementation. */
+
         // this is by definition of the binomial coefficient.
         // there are 0 ways to choose a sample of r items from a collection of n unless r is a non-negative number
         // similarly, it is impossible to choose a set of r elements from n if r is larger than n
@@ -41,6 +45,18 @@ namespace RecursiveThinking
         }
 
         return (recursive_combination_formula(n-1, r) + recursive_combination_formula(n-1, r-1));
+
+    }
+
+
+     /* Problem description, Problem 9 */
+     /*
+      * Examine this pattern of asterisks and blanks,
+and write a recursive function that can gen-
+erate exactly this pattern:
+      */
+    std::string generate_asterisk_pattern()
+    {
 
     }
 }
