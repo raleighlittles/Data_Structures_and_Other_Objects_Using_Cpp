@@ -28,10 +28,6 @@ StoreCheckout::StoreCheckout(unsigned int num_of_lines,
 
 void StoreCheckout::simulate_passage_of_time(unsigned int seconds)
 {
-
-    std::cout << "Simulating passage of " << seconds << " seconds. " << std::endl;
-
-
     for (unsigned int i = 0; i < seconds; i++)
     {
         unsigned int users_popped = 0;
@@ -42,26 +38,24 @@ void StoreCheckout::simulate_passage_of_time(unsigned int seconds)
         for (auto &qu : checkout_system)
         {
 
-            std::cout << "Current queue size: " << qu.size() << std::endl;
             // flip a coin to decide if the line should have moved a user at that time
 
             bool transaction_complete = get_random_boolean();
 
-            if (transaction_complete == true)
+            if (transaction_complete)
             {
                 users_popped++;
                 qu.pop_front();
             }
 
+            // flip a coin to decide if a user has entered the line since the last moment of time
             bool user_arrived = get_random_boolean();
 
-            if (user_arrived == true)
+            if (user_arrived)
             {
                 users_added++;
                 qu.push_back(0L);
             }
-
-            // add a user to every line
 
             for (auto & user : qu)
             {
@@ -74,14 +68,7 @@ void StoreCheckout::simulate_passage_of_time(unsigned int seconds)
             }
 
             qu.shrink_to_fit();
-
-            std::cout << "After processing, current queue size: " << qu.size() << std::endl;
         }
-
-        std::cout << users_added << " users were added to queues this round. " << std::endl;
-        std::cout << users_popped << " users were popped from queues this round. " << std::endl;
-        std::cout << users_left << " users abandoned the line this round." << std::endl;
-
     }
 }
 
@@ -102,7 +89,5 @@ void StoreCheckout::print_lines_status()
     {
         std::cout << "Current queue (#" << queue_number << ") has size : " << checkout_system[queue_number].size() << std::endl;
 
-
-        
     }
 }
