@@ -2,7 +2,12 @@
 
 #include <iostream>
 
-int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
+int main()
+{
+    StoreCheckout costco = StoreCheckout(10, 100, 25);
+
+    costco.simulate_passage_of_time(100);
+
+    costco.print_lines_status();
+
 }

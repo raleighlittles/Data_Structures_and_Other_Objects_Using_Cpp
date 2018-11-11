@@ -7,50 +7,81 @@
 #include "store_checkout.h"
 
 StoreCheckout::StoreCheckout(unsigned int num_of_lines,
-                             unsigned int max_wait_per_customer)
+                             unsigned int max_wait_per_customer,
+                            unsigned int starting_customers_per_line)
    : MAX_WAIT_PER_CUSTOMER(max_wait_per_customer)
 {
-    std::deque<long> checkout_line;
 
-    checkout_line.push_back(0L);
 
     for (unsigned int i = 0; i < num_of_lines; i++)
     {
-        this->checkout_system.push_back(checkout_line);
+        std::deque<long> checkout_line;
+
+        for (unsigned int j = 0; j < starting_customers_per_line; j++)
+        {
+            checkout_line.push_back(0L);
+        }
+        checkout_system.push_back(checkout_line);
     }
 
 }
 
 void StoreCheckout::simulate_passage_of_time(unsigned int seconds)
 {
+
+    std::cout << "Simulating passage of " << seconds << " seconds. " << std::endl;
+
+
     for (unsigned int i = 0; i < seconds; i++)
     {
-        increment_all_times();
-    }
-}
+        unsigned int users_popped = 0;
+        unsigned int users_added = 0;
+        unsigned int users_left = 0;
 
-void StoreCheckout::increment_all_times()
-{
-    for (auto qu : checkout_system)
-    {
-
-        // flip a coin to decide if the line should have moved a user at that time
-
-        bool transaction_complete = get_random_boolean();
-
-        if (transaction_complete == true)
+        // Since we want to access original objects and modify them, you must use the address-of operator!
+        for (auto &qu : checkout_system)
         {
-            qu.pop_front();
-        }
 
-        for (auto user : qu)
-        {
-            user++;
-            if (user > this->MAX_WAIT_PER_CUSTOMER)
-            { // user gets frustrated and leaves the store
-                qu.erase(std::find(qu.begin(), qu.end(), user));
+            std::cout << "Current queue size: " << qu.size() << std::endl;
+            // flip a coin to decide if the line should have moved a user at that time
+
+            bool transaction_complete = get_random_boolean();
+
+            if (transaction_complete == true)
+            {
+                users_popped++;
+                qu.pop_front();
             }
+
+            bool user_arrived = get_random_boolean();
+
+            if (user_arrived == true)
+            {
+                users_added++;
+                qu.push_back(0L);
+            }
+
+            // add a user to every line
+
+            for (auto & user : qu)
+            {
+                user++;
+                if (user > this->MAX_WAIT_PER_CUSTOMER)
+                { // user gets frustrated and leaves the store
+                    users_left++;
+                    qu.erase(std::find(qu.begin(), qu.end(), user));
+                }
+            }
+
+            qu.shrink_to_fit();
+
+            std::cout << "After processing, current queue size: " << qu.size() << std::endl;
         }
+
+        std::cout << users_added << " users were added to queues this round. " << std::endl;
+        std::cout << users_popped << " users were popped from queues this round. " << std::endl;
+        std::cout << users_left << " users abandoned the line this round." << std::endl;
+
     }
 }
 
@@ -69,7 +100,9 @@ void StoreCheckout::print_lines_status()
     std::cout << "Printing report of " << checkout_system.size() << " lines." << std::endl;
     for (unsigned int queue_number = 0; queue_number < checkout_system.size(); queue_number++)
     {
-        std::cout << "Current queue (#" << queue_number << ") has size : " << checkout_system.at(queue_number).size() << std::endl;
+        std::cout << "Current queue (#" << queue_number << ") has size : " << checkout_system[queue_number].size() << std::endl;
+
+
         
     }
 }

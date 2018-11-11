@@ -37,11 +37,14 @@ time intervals
 
 public:
     StoreCheckout(unsigned int num_of_lines,
-            unsigned int max_wait_per_customer);
+            unsigned int max_wait_per_customer,
+    unsigned int starting_customers_per_line);
+
 
     void simulate_passage_of_time(unsigned int seconds);
 
-private:
+    void print_lines_status();
+
     //void switch_line(unsigned int starting_line, unsigned int ending_line);
 
     // use a deque only because it supports iteration, while regular queues do not
@@ -52,7 +55,7 @@ private:
 
     bool get_random_boolean();
 
-    void print_lines_status();
+
 };
 
 #endif //CHAPTER_8_STORE_QUEUE_H
