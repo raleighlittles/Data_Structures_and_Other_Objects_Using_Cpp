@@ -11,8 +11,7 @@
 #include <random>
 #include <iostream>
 
-class StoreCheckout
-{
+class StoreCheckout {
     // Problem description
     /*
      * Write a simulation program of the lines at a
@@ -37,8 +36,8 @@ time intervals
 
 public:
     StoreCheckout(unsigned int num_of_lines,
-            unsigned int max_wait_per_customer,
-    unsigned int starting_customers_per_line);
+                  unsigned int max_wait_per_customer,
+                  unsigned int starting_customers_per_line);
 
 
     void simulate_passage_of_time(unsigned int seconds);
@@ -48,7 +47,7 @@ public:
     //void switch_line(unsigned int starting_line, unsigned int ending_line);
 
     // use a deque only because it supports iteration, while regular queues do not
-    std::vector <std::deque<long>> checkout_system;
+    std::vector<std::deque<long>> checkout_system;
     const unsigned int MAX_WAIT_PER_CUSTOMER;
 
     void increment_all_times();
