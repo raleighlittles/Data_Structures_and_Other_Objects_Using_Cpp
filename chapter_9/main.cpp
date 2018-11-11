@@ -1,6 +1,8 @@
 #include <iostream>
+#include "combination_formula.hpp"
+
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
+
+    std::cout << RecursiveThinking::recursive_combination_formula(10, 6) << std::endl;
 }
