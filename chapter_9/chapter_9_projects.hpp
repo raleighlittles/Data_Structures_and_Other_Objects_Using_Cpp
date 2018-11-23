@@ -3,6 +3,7 @@
 //
 
 #include <sstream>
+#include <cassert>
 
 namespace RecursiveThinking {
 
@@ -77,6 +78,37 @@ erate exactly this pattern:
         // line.
 
         return recursive_function(0, 8);
+
+    }
+
+    // Note: The Ackermann function is unique since its one of the earliest examples of a total computable function that isn't
+    // primitive recursive, i.e. a function that can't be implemented using only do-loops
+    int ackermann_function(int x, int y)
+    {
+        assert((x >= 0) and (y >= 0)); // ackermann function is only defined for non-negative integers
+
+        if (x == 0)
+        {
+            return 2 * y;
+        }
+
+        else if (x >= 1)
+        {
+            if (y == 0)
+            {
+                return 0;
+            }
+
+            if (y == 1)
+            {
+                return 1;
+            }
+
+            if (y >= 2)
+            {
+                return ackermann_function(x-1, ackermann_function(x, y-1));
+            }
+        }
 
     }
 
