@@ -76,6 +76,60 @@ private:
         print_nodes_recursive(root_node->right_node);
     }
 
+    void delete_value_recursive(std::unique_ptr<Node<Type>> parent_node, std::unique_ptr<Node<Type>> current_node, Type value_to_delete)
+    {
+        if (current_node == false)
+        {
+            if (current_node->node_value == value_to_delete)
+            {
+                if ((current_node->left_node == nullptr) or (current_node->right_node == nullptr))
+                {
+                    std::unique_ptr<Node<Type>> temporary = current_node->left_node;
+                    if (current_node->right_node)
+                    {
+                        temporary = current_node->right_node;
+                    }
+
+                    if (parent_node)
+                    {
+                        if (parent_node->left == current_node)
+                        {
+                            parent_node->left = temporary;
+                        }
+
+                        else
+                        {
+                            parent_node->right_node = temporary;
+                        }
+                    }
+
+                    else
+                        {
+                        this->root_node = temporary;
+                    }
+                }
+
+                else
+                {
+                    std::unique_ptr<Node<Type>> substitute = current_node->right_node;
+                    while (substitute->left_node)
+                    {
+                        substitute = substitute->left_node;
+                    }
+
+                    Type temporary_value = current_node->value;
+                    current_node->value = substitute->node_value,
+                    substitute->node_value = temporary_value;
+                    return delete_value_recursive(current_node, current_node->right_node, temporary_value);
+                }
+
+
+
+            }
+        }
+
+    }
+
 
 public:
     void add_node(Node<Type> node)
@@ -93,7 +147,7 @@ public:
 
     void delete_value(Type value)
     {
-
+        return delete_value_recursive(nullptr, this->root_node, value);
     }
 
 
