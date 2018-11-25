@@ -4,27 +4,7 @@
 
 #include <memory>
 #include <iostream>
-
-template <class NodeType>
-class Node
-{
-private:
-    NodeType node_value;
-    std::unique_ptr<Node> left_node;
-    std::unique_ptr<Node> right_node;
-
-    //https://gist.github.com/mgechev/5911348
-
-    explicit Node(NodeType value, Node<NodeType> left = nullptr, Node<NodeType> right = nullptr)
-    :
-    node_value(value),
-    left_node(left),
-    right_node(right)
-    {
-        // empty constructur
-    }
-
-};
+#include "node.hpp"
 
 template <class Type>
 class BinarySearchTree
@@ -123,13 +103,9 @@ private:
                     return delete_value_recursive(current_node, current_node->right_node, temporary_value);
                 }
 
-
-
             }
         }
-
     }
-
 
 public:
     void add_node(Node<Type> node)
