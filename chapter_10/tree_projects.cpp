@@ -16,10 +16,5 @@ namespace Trees
 
     }
 
-    int evaluate_expression_tree(ExpressionTree input)
-    {
-
-    }
-
 
 }
