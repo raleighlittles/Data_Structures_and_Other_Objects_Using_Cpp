@@ -11,10 +11,10 @@
 template <class NodeType>
 class Node
 {
-private:
+public:
     NodeType node_value;
-    std::unique_ptr<Node> left_node;
-    std::unique_ptr<Node> right_node;
+    std::shared_ptr<Node> left_node;
+    std::shared_ptr<Node> right_node;
 
     //https://gist.github.com/mgechev/5911348
 
@@ -25,6 +25,26 @@ private:
             right_node(right)
     {
         // empty constructor
+    }
+
+    // copy constructor
+    Node(const Node &copy)
+    :
+        node_value(copy.node_value),
+        left_node(copy.left_node),
+        right_node(copy.right_node)
+    {
+         // empty constructor
+    }
+
+    // assignment operator
+    Node& operator=(const Node &node)
+    {
+        this->node_value = node.node_value;
+        this->left_node = node.left_node;
+        this->right_node = node.right_node;
+
+        return *this; // so you can "chain" assignments
     }
 
 };

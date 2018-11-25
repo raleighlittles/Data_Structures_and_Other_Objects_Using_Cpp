@@ -10,6 +10,8 @@
 #include <string>
 #include <array>
 #include <stack>
+#include <algorithm>
+#include <sstream>
 
 /*
  *
@@ -54,7 +56,12 @@ class ExpressionTree
 {
 private:
     std::array<std::string, 10> possible_operators;
-    bool is_operator(std::string string_to_check);
+    std::shared_ptr<Node<std::string>> root_node;
+
+    bool is_operator(std::string string_to_check)
+    {
+        return (std::find(possible_operators.begin(), possible_operators.end(), string_to_check) != possible_operators.end());
+    }
 
 public:
 
@@ -62,19 +69,48 @@ public:
     ExpressionTree(std::string postfix_expression)
     {
          // reference: https://www.geeksforgeeks.org/expression-tree/
-           std::stack<int> expression_stack;
-           std::unique_ptr<Node<std::string>> node1;
-           std::unique_ptr<Node<std::string>> node2;
-           std::unique_ptr<Node<std::string>> node3;
+           std::stack<std::shared_ptr<Node<std::string>>> expression_stack;
+           std::shared_ptr<Node<std::string>> node1;
+           std::shared_ptr<Node<std::string>> node2;
+           std::shared_ptr<Node<std::string>> node3;
 
-           // split string on spaces!!
+           std::istringstream stringstream(postfix_expression);
 
-           for (unsigned int index = 0; index < postfix_expression.length(); index++)
+           for (std::string character; stringstream >> character; )
            {
-               if (is_operator()
+
+               if (is_operator(character) == false)
+
+               {
+                  node1 = Node(character);
+                    expression_stack.push(node1);
+               }
+
+               else
+               {
+                  node1 = Node(character);
+
+                  node2 = expression_stack.top();
+                    expression_stack.pop();
+
+                  node3 = expression_stack.top();
+                  expression_stack.pop();
+
+                  node1->right_node = node2;
+
+                  node2->left_node = node3;
+
+                  expression_stack.push(node1);
+
+               }
+
            }
 
 
+       node1 = expression_stack.top();
+       expression_stack.pop();
+
+       this->root_node = node1;
     }
 
 
