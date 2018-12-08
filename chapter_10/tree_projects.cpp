@@ -13,7 +13,18 @@ namespace Trees
         // Do an in-order traversal of the BST, and append it to a list
         std::list<Type> result;
 
+        Node current_node = input.root_node;
 
+        while (current_node != nullptr)
+        {
+            current_node = current_node.left_node;
+
+            result.push_back(current_node.node_value);
+
+            current_node = current_node.right_node;
+        }
+
+        return result;
     }
 
 
