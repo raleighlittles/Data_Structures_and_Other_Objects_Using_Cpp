@@ -7,11 +7,13 @@
 #define CHAPTER_10_EXPRESSION_TREE_H
 
 #include "node.hpp"
+
 #include <string>
 #include <array>
 #include <stack>
 #include <algorithm>
 #include <sstream>
+#include <cmath>
 
 /*
  *
@@ -56,14 +58,21 @@ class ExpressionTree
 {
 private:
     std::array<std::string, 10> possible_operators;
-    std::shared_ptr<Node<std::string>> root_node;
 
     bool is_operator(std::string string_to_check)
     {
         return (std::find(possible_operators.begin(), possible_operators.end(), string_to_check) != possible_operators.end());
     }
 
+    template <class Type>
+    bool is_leaf_node(const Node<Type>& node)
+    {
+        return ((node.left_node == nullptr) and (node.right_node == nullptr));
+    }
+
 public:
+
+    std::shared_ptr<Node<std::string>> root_node;
 
     // returns the root node of an expression tree
     ExpressionTree(std::string postfix_expression)
@@ -111,6 +120,33 @@ public:
        expression_stack.pop();
 
        this->root_node = node1;
+    }
+
+    // Nodes in the tree will be any combination of strings for operators,
+    // or any numeric type for operands
+    template <class Type>
+    double evaluate()
+    {
+        if (root_node == nullptr)
+        {
+            return 0.0;
+        }
+
+        if (is_leaf_node(*root_node)
+        {
+            return static_cast<double>(root_node);
+        }
+
+        Node<Type> current = Node(root_node);
+
+        while (current_node != nullptr)
+        {
+
+            // 
+
+        }
+
+
     }
 
 
