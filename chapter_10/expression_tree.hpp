@@ -75,7 +75,7 @@ public:
     std::shared_ptr<Node<std::string>> root_node;
 
     // returns the root node of an expression tree
-    ExpressionTree(std::string postfix_expression)
+    explicit ExpressionTree(const std::string &postfix_expression)
     {
          // reference: https://www.geeksforgeeks.org/expression-tree/
            std::stack<std::shared_ptr<Node<std::string>>> expression_stack;
@@ -125,27 +125,59 @@ public:
     // Nodes in the tree will be any combination of strings for operators,
     // or any numeric type for operands
     template <class Type>
-    double evaluate()
-    {
+    double evaluate(Node<Type> root_node)
+    { // does an in-order evaluation of the
+        /*
         if (root_node == nullptr)
-        {
+        { // change to assert
             return 0.0;
         }
 
-        if (is_leaf_node(*root_node)
+        if (is_leaf_node(*root_node))
         {
-            return static_cast<double>(root_node);
+            return std::stod(root_node->node_value);
         }
 
-        Node<Type> current = Node(root_node);
+        Node<Type> current_node = Node(&root_node);
 
         while (current_node != nullptr)
         {
 
-            // 
+            current_node = current_node.left_node;
+
+            if (current_node.node_value == "+")
+            {
+
+            }
 
         }
 
+        */
+
+        // https://www.geeksforgeeks.org/evaluation-of-expression-tree/
+
+        if (root_node == nullptr)
+        {
+            // throw an exception
+            return 0.0;
+        }
+
+        if (is_leaf_node(root_node))
+        {
+            return std::stod(root_node.node_value);
+        }
+
+        double left_value = evaluate(root_node.left_node);
+        double right_value = evaluate(root_node.right_node);
+
+        switch (root_node.node_value)
+        { // check for each operator
+            case "+" : return left_value + right_value;
+            case "-" : return left_value - right_value;
+            case "/" : return left_value / right_value;
+            case "*" : return left_value * right_value;
+            default  : return 0.0;
+        }
 
     }
 
