@@ -14,6 +14,8 @@
 #include <algorithm>
 #include <sstream>
 #include <cmath>
+#include <cassert>
+#include <memory>
 
 /*
  *
@@ -53,98 +55,158 @@ ates to 14. So the entire
 tree evaluates to 10*14,
 which is 140.
  */
-//template <class Type>
+template <class Type>
 class ExpressionTree
 {
 private:
-    std::array<std::string, 10> possible_operators;
+    std::array<std::string, 4> possible_operators = {"+", "-", "/", "*"};
 
     bool is_operator(std::string string_to_check)
     {
         return (std::find(possible_operators.begin(), possible_operators.end(), string_to_check) != possible_operators.end());
     }
 
-    template <class Type>
-    bool is_leaf_node(const Node<Type>& node)
+    //bool is_leaf_node(const Node<Type>& node)
+
+    //template <class Type>
+    bool is_leaf_node(std::shared_ptr<Node<Type>> node)
     {
-        return ((node.left_node == nullptr) and (node.right_node == nullptr));
+        return ((node->left_node == nullptr) and (node->right_node == nullptr));
     }
 
 public:
 
+    size_t size = 0;
+
     std::shared_ptr<Node<std::string>> root_node;
 
     // returns the root node of an expression tree
-    ExpressionTree(std::string postfix_expression)
+    //template <class Type>
+    explicit ExpressionTree(const std::string &postfix_expression)
     {
          // reference: https://www.geeksforgeeks.org/expression-tree/
-           std::stack<std::shared_ptr<Node<std::string>>> expression_stack;
-           std::shared_ptr<Node<std::string>> node1;
-           std::shared_ptr<Node<std::string>> node2;
-           std::shared_ptr<Node<std::string>> node3;
+           //std::stack<std::shared_ptr<Node<std::string>>> expression_stack;
+           //std::shared_ptr<Node<std::string>> node1;
+           //std::shared_ptr<Node<std::string>> node2;
+          // std::shared_ptr<Node<std::string>> node3;
+
+          std::stack<std::shared_ptr<Node<std::string>>> expression_stack;
+
+          std::shared_ptr<Node<std::string>> node1, node2, node3;
 
            std::istringstream stringstream(postfix_expression);
 
-           for (std::string character; stringstream >> character; )
-           {
+           for (std::string character; stringstream >> character; ) {
+
+               //node1 = std::make_shared<Node<std::string>>(character);
+               //Node<std::string> node_1  = Node<std::string>(character);
+
+               this->size++;
+
 
                if (is_operator(character) == false)
-
                {
-                  node1 = Node(character);
-                    expression_stack.push(node1);
+                   // node1 = Node(character);
+
+                   //node1 = std::make_shared<Node<std::string>>(character);
+
+                   //Node<std::string> node_for_stack = Node<std::string>(character);
+
+                   //node1 = std::make_shared<Node<Type>>(node_for_stack);
+
+                   //node1 = std::make_shared<Node<Type>>(character);
+
+                   node1 = std::make_shared<Node<std::string>>(character);
+
+                   expression_stack.push(node1);
                }
-
                else
-               {
-                  node1 = Node(character);
+                   {
+                   // node1 = Node(character);
 
-                  node2 = expression_stack.top();
-                    expression_stack.pop();
+                   //node1 = std::make_shared<Node<Type>>(character);
 
-                  node3 = expression_stack.top();
-                  expression_stack.pop();
+                   //node1 = std::shared_ptr<Node<std::string>>(new Node(character));
 
-                  node1->right_node = node2;
+                   node1 = std::make_shared<Node<std::string>>(character);
 
-                  node2->left_node = node3;
+                   node2 = expression_stack.top();
 
-                  expression_stack.push(node1);
+                   expression_stack.pop();
+
+                   node3 = expression_stack.top();
+
+                   expression_stack.pop();
+
+                   node1->right_node = node2;
+
+                   node1->left_node = node3;
+
+                   expression_stack.push(node1);
 
                }
 
            }
 
+       assert(expression_stack.empty() == false);
 
        node1 = expression_stack.top();
+
        expression_stack.pop();
 
+       assert(expression_stack.empty() == true);
+
        this->root_node = node1;
+
     }
 
     // Nodes in the tree will be any combination of strings for operators,
     // or any numeric type for operands
-    template <class Type>
-    double evaluate()
-    {
+    //template <class Type>
+    double evaluate(std::shared_ptr<Node<Type>> root_node)
+    { // does an in-order evaluation of the
+
+        // https://www.geeksforgeeks.org/evaluation-of-expression-tree/
+
         if (root_node == nullptr)
         {
-            return 0.0;
+            // throw an exception
+            assert(this->size != 0);
+            throw(std::invalid_argument("Null pointer exception, empty tree"));
         }
 
-        if (is_leaf_node(*root_node)
+        if (is_leaf_node(root_node))
         {
-            return static_cast<double>(root_node);
+            return std::stod(root_node->node_value);
         }
 
-        Node<Type> current = Node(root_node);
+        double left_value = evaluate(root_node->left_node);
+        double right_value = evaluate(root_node->right_node);
 
-        while (current_node != nullptr)
-        {
 
-            // 
+            if (root_node->node_value == "+")
+            {
+                return left_value + right_value;
+            }
 
-        }
+            if (root_node->node_value == "-")
+            {
+                return left_value - right_value;
+            }
+
+            if (root_node->node_value == "/")
+            {
+                return left_value / right_value;
+            }
+            if (root_node->node_value == "*" )
+            {
+                return left_value * right_value;
+            }
+            else
+            {
+                throw(std::invalid_argument("Found a node that wasn't an operator type, or a leaf node."));
+
+            }
 
 
     }

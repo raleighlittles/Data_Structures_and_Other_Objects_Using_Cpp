@@ -18,13 +18,20 @@ public:
 
     //https://gist.github.com/mgechev/5911348
 
-    explicit Node(NodeType value, Node<NodeType> left = nullptr, Node<NodeType> right = nullptr)
+    explicit Node(NodeType value)
             :
-            node_value(value),
-            left_node(left),
-            right_node(right)
+            node_value(value)
     {
         // empty constructor
+    }
+
+    Node(NodeType value, Node<NodeType> left, Node<NodeType> right)
+        :
+        node_value(value),
+        left_node(std::make_shared<Node<NodeType>>(left)),
+        right_node(std::make_shared<Node<NodeType>>(right))
+    {
+
     }
 
     // copy constructor
