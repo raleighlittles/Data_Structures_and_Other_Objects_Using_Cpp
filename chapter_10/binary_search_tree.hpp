@@ -18,34 +18,61 @@ public:
     std::shared_ptr<Node<Type>> root_node;
     unsigned int nodes_count = 0;
 
-    void add_node_recursive(std::shared_ptr<Node<Type>> root_node, Type node_value)
+     void add_node(Node<Type> node)
     {
-        if (root_node->node_value > node_value)
-        {
-            if (!root_node->left_node)
-            {
-                root_node->left_node = std::make_shared<Node<Type>>(Node(node_value));
-            }
+        nodes_count++;
 
-            else
-            {
-                add_node_recursive(root_node->left_node, node_value);
-            }
+        if (this->root_node)
+        {
+            std::cout << "Attempting to add node with value : " << node.node_value << std::endl;
+            auto res = add_node_recursive(std::make_shared<Node<Type>>(node), node.node_value);
         }
+
 
         else
         {
-            if (root_node->right_node == nullptr)
-            {
-                //root_node.right_node = Node(node_value);
-                root_node->left_node = std::make_shared<Node<Type>>(Node(node_value));
-            }
-
-            else
-            {
-                add_node_recursive(root_node->right_node, node_value);
-            }
+            std::cout << "Empty tree, currently adding node with value " << node.node_value << std::endl;
+            this->root_node = std::make_shared<Node<Type>>(node.node_value);
         }
+
+    }
+
+    std::shared_ptr<Node<Type>> insert(std::shared_ptr<Node<Type>> node_to_insert_at, Type value_to_insert)
+    {
+        if (!node_to_insert_at)
+        {
+            return std::make_shared<Node<Type>>(Node(value_to_insert));
+        }
+
+        if (value_to_insert < node_to_insert_at->node_value)
+        {
+            node_to_insert_at->left_node = insert(node_to_insert_at->left_node, value_to_insert);
+
+        }
+
+        else if (value_to_insert > node_to_insert_at->node_value)
+        {
+            node_to_insert_at->right_node = insert(node_to_insert_at->right_node, value_to_insert);
+        }
+
+        return node_to_insert_at;
+    }
+
+
+    std::shared_ptr<Node<Type>> add_node_recursive(std::shared_ptr<Node<Type>> new_node, Type node_value)
+    {
+
+        if (node_value < new_node->node_value)
+        {
+            new_node->left_node = add_node_recursive(new_node->left_node, node_value);
+        }
+
+        else if (node_value > new_node->node_value)
+        {
+            new_node->right_node = add_node_recursive(new_node->right_node, node_value);
+        }
+
+         return new_node;
     }
 
     void print_nodes_recursive(std::shared_ptr<Node<Type>> root_node)
@@ -111,16 +138,6 @@ public:
         }
     }
 
-    void add_node(Node<Type> node)
-    {
-        if (root_node)
-        {
-            add_node_recursive(root_node, node.node_value);
-        }
-
-        nodes_count++;
-    }
-
     void print_nodes()
     {
         print_nodes_recursive(root_node);
@@ -133,6 +150,11 @@ public:
 
     explicit BinarySearchTree<Type>(const Type initial_value)
     {
+        std::cout << "BST constructor called with " << initial_value << std::endl;
+        // this->root_node = std::make_shared<Node<Type>>(Node<Type>(initial_value));
+
+        // add_node(Node(initial_value));
+
         this->root_node = std::make_shared<Node<Type>>(Node<Type>(initial_value));
     }
 
@@ -148,6 +170,8 @@ public:
         {
             copy_tree(this->root_node, bst.root_node);
         }
+
+        this->nodes_count = bst.nodes_count;
     }
 
     void copy_tree(std::shared_ptr<Node<Type>> new_root, std::shared_ptr<Node<Type>> existing_root)

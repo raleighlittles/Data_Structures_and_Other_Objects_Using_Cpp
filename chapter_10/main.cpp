@@ -2,7 +2,7 @@
 #include <list>
 
 #include "tree_projects.cpp"
-
+#include "expression_tree.hpp"
 
 int main() {
     // test expression tree?
@@ -19,9 +19,7 @@ int main() {
 
     BinarySearchTree<int> bst = BinarySearchTree<int>(10);
 
-    //bst.add_node(Node<int>(10));
-
-    bst.add_node(Node<int>(12));
+   /* bst.add_node(Node<int>(12));
 
     bst.add_node(Node<int>(15));
 
@@ -29,18 +27,30 @@ int main() {
 
     bst.add_node(Node<int>(30));
 
-    bst.add_node(Node<int>(36));
+    bst.add_node(Node<int>(36)); */
+
+   bst.insert(bst.root_node, 12);
+
+   bst.insert(bst.root_node, 15);
+
+   bst.insert(bst.root_node, 25);
+
+   bst.insert(bst.root_node, 30);
+
+   bst.insert(bst.root_node, 36);
 
    std::list<int> ll;
+
+   std::cout << "Beginning to convert BST to List." << std::endl;
+
    ll = Trees::convert_BST_to_LL(bst);
 
-   std::cout << "This should now be a sorted list of " << ll.size() << " eleemnts." << std::endl;
+   std::cout << "This should now be a sorted list of " << bst.nodes_count << " eleemnts." << std::endl;
 
    for (auto el : ll)
    {
        std::cout << el << std::endl;
    }
-
 
 
 }
