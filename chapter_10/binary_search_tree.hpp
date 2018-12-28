@@ -150,10 +150,7 @@ public:
 
     explicit BinarySearchTree<Type>(const Type initial_value)
     {
-        std::cout << "BST constructor called with " << initial_value << std::endl;
-        // this->root_node = std::make_shared<Node<Type>>(Node<Type>(initial_value));
-
-        // add_node(Node(initial_value));
+        //std::cout << "BST constructor called with " << initial_value << std::endl;
 
         this->root_node = std::make_shared<Node<Type>>(Node<Type>(initial_value));
     }

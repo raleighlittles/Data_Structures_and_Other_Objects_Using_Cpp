@@ -16,8 +16,6 @@ public:
     std::shared_ptr<Node> left_node;
     std::shared_ptr<Node> right_node;
 
-    //https://gist.github.com/mgechev/5911348
-
     explicit Node(NodeType value)
             :
             node_value(value)

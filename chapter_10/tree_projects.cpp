@@ -5,7 +5,12 @@
 
 #include <list>
 #include <stack>
-
+// Problem #8
+// Write a function that takes a binary search
+// tree as input and produces a linked list of
+// the entries, with the entries sorted (smallest
+// entries at the front of the list and largest entries at the
+//        back). Hint: use in-order traversal.
 
 namespace Trees
 {

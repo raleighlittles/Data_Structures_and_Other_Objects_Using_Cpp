@@ -18,7 +18,7 @@
 #include <memory>
 
 /*
- *
+ * Problem #1
  * This project deals with a simple kind of
 expression tree, where there are two kinds of
 nodes:
@@ -66,9 +66,6 @@ private:
         return (std::find(possible_operators.begin(), possible_operators.end(), string_to_check) != possible_operators.end());
     }
 
-    //bool is_leaf_node(const Node<Type>& node)
-
-    //template <class Type>
     bool is_leaf_node(std::shared_ptr<Node<Type>> node)
     {
         return ((node->left_node == nullptr) and (node->right_node == nullptr));
@@ -80,53 +77,27 @@ public:
 
     std::shared_ptr<Node<std::string>> root_node;
 
-    // returns the root node of an expression tree
-    //template <class Type>
     explicit ExpressionTree(const std::string &postfix_expression)
     {
-         // reference: https://www.geeksforgeeks.org/expression-tree/
-           //std::stack<std::shared_ptr<Node<std::string>>> expression_stack;
-           //std::shared_ptr<Node<std::string>> node1;
-           //std::shared_ptr<Node<std::string>> node2;
-          // std::shared_ptr<Node<std::string>> node3;
-
           std::stack<std::shared_ptr<Node<std::string>>> expression_stack;
 
           std::shared_ptr<Node<std::string>> node1, node2, node3;
 
            std::istringstream stringstream(postfix_expression);
 
-           for (std::string character; stringstream >> character; ) {
-
-               //node1 = std::make_shared<Node<std::string>>(character);
-               //Node<std::string> node_1  = Node<std::string>(character);
+        for (std::string character; stringstream >> character;) {
 
                this->size++;
 
 
                if (is_operator(character) == false)
                {
-                   // node1 = Node(character);
-
-                   //node1 = std::make_shared<Node<std::string>>(character);
-
-                   //Node<std::string> node_for_stack = Node<std::string>(character);
-
-                   //node1 = std::make_shared<Node<Type>>(node_for_stack);
-
-                   //node1 = std::make_shared<Node<Type>>(character);
-
                    node1 = std::make_shared<Node<std::string>>(character);
 
                    expression_stack.push(node1);
                }
                else
                    {
-                   // node1 = Node(character);
-
-                   //node1 = std::make_shared<Node<Type>>(character);
-
-                   //node1 = std::shared_ptr<Node<std::string>>(new Node(character));
 
                    node1 = std::make_shared<Node<std::string>>(character);
 
@@ -160,17 +131,10 @@ public:
 
     }
 
-    // Nodes in the tree will be any combination of strings for operators,
-    // or any numeric type for operands
-    //template <class Type>
-    double evaluate(std::shared_ptr<Node<Type>> root_node)
-    { // does an in-order evaluation of the
-
-        // https://www.geeksforgeeks.org/evaluation-of-expression-tree/
+    double evaluate(std::shared_ptr<Node<Type>> root_node) {
 
         if (root_node == nullptr)
         {
-            // throw an exception
             assert(this->size != 0);
             throw(std::invalid_argument("Null pointer exception, empty tree"));
         }
@@ -208,10 +172,7 @@ public:
 
             }
 
-
     }
-
-
 
 };
 

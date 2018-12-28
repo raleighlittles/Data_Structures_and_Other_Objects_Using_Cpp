@@ -5,7 +5,7 @@
 #include "expression_tree.hpp"
 
 int main() {
-    // test expression tree?
+    // test expression tree
 
      const std::string sample_postfix_expression =  "10 2 8 * + 3 -";
 
@@ -18,16 +18,6 @@ int main() {
     // test BST/LL
 
     BinarySearchTree<int> bst = BinarySearchTree<int>(10);
-
-   /* bst.add_node(Node<int>(12));
-
-    bst.add_node(Node<int>(15));
-
-    bst.add_node(Node<int>(25));
-
-    bst.add_node(Node<int>(30));
-
-    bst.add_node(Node<int>(36)); */
 
    bst.insert(bst.root_node, 12);
 
