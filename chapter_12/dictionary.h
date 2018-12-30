@@ -25,7 +25,9 @@ one you implemented for Self-Test Exercise 28.
 
 class WordDictionary {
 private:
-    std::map<size_t, std::string> dictionary_table;
+    std::map<std::size_t, std::string> dictionary_table;
+    std::size_t dictionary_size = dictionary_table.size();
+    std::hash<std::string> hasher;
 
 
 public:
@@ -40,8 +42,6 @@ public:
 
         // store the value from above with dictionary_table
 
-        std::hash<std::string> hasher;
-
         rapidcsv::Document document(dictionary_filename);
 
         std::vector<std::string> words = document.GetColumn<std::string>("Word");
@@ -55,11 +55,24 @@ public:
 
             std::string word_without_quotes = std::regex_replace(*word, pattern, "");
 
-            size_t hash_result = hasher(word_without_quotes);
+            std::size_t hash_result = hasher(word_without_quotes);
             // add this to map
-            dictionary_table.insert(std::make_pair(hash_result, word_without_quotes));
+            dictionary_table.insert(std::make_pair(hash_result, definitions[index]));
         }
 
+    }
+
+    std::string lookup(std::string word_to_search) {
+        // compute the hash of the word, and see if its in the map
+        std::size_t desired_hash = hasher(word_to_search);
+
+        auto result = dictionary_table.find(desired_hash);
+
+        if (result != dictionary_table.end()) {
+            return result->second;
+        } else {
+            return "";
+        }
     }
 };
 
