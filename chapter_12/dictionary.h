@@ -13,6 +13,7 @@
 #include <sstream>
 #include "rapid_csv.h"
 #include <regex>
+#include <iostream>
 #include <algorithm>
 
 /* Implement a dictionary program using a
@@ -32,21 +33,15 @@ private:
 
 public:
     explicit WordDictionary(
-            std::string dictionary_filename) { // see: https://waterprogramming.wordpress.com/2017/08/20/reading-csv-files-in-c/
-        // as an example of how to parse CSV files
-
-
-        // iterate through the dictionary CSV file
-
-        // create a map, out of it, with an integer (the hash) of the string, and the definition as the value
-
-        // store the value from above with dictionary_table
+            std::string dictionary_filename) {
 
         rapidcsv::Document document(dictionary_filename);
 
-        std::vector<std::string> words = document.GetColumn<std::string>("Word");
+        std::vector column_names = document.GetColumnNames();
 
-        std::vector<std::string> definitions = document.GetColumn<std::string>("Definition");
+        std::vector<std::string> definitions = document.GetColumn<std::string>("definition");
+
+        std::vector<std::string> words = document.GetColumn<std::string>("word");
 
         for (auto word = words.begin(); word != words.end(); ++word) {
             long index = std::distance(words.begin(), word);
@@ -56,14 +51,13 @@ public:
             std::string word_without_quotes = std::regex_replace(*word, pattern, "");
 
             std::size_t hash_result = hasher(word_without_quotes);
-            // add this to map
+
             dictionary_table.insert(std::make_pair(hash_result, definitions[index]));
         }
 
     }
 
     std::string lookup(std::string word_to_search) {
-        // compute the hash of the word, and see if its in the map
         std::size_t desired_hash = hasher(word_to_search);
 
         auto result = dictionary_table.find(desired_hash);
