@@ -35,7 +35,7 @@ public:
     explicit WordDictionary(
             std::string dictionary_filename) {
 
-        rapidcsv::Document document(dictionary_filename);
+        rapidcsv::Document document(dictionary_filename, rapidcsv::LabelParams(0, -1));
 
         std::vector column_names = document.GetColumnNames();
 
