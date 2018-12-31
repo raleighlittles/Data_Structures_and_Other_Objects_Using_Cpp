@@ -16,6 +16,8 @@
 #include <iostream>
 #include <algorithm>
 
+#include <boost/locale.hpp>
+
 /* Implement a dictionary program using a
 table. The user inputs a word, and the word’s
 definition is displayed. You will need to re-
@@ -32,6 +34,7 @@ private:
 
 
 public:
+    // Requires full path to executable
     explicit WordDictionary(
             std::string dictionary_filename) {
 
@@ -42,6 +45,8 @@ public:
         std::vector<std::string> definitions = document.GetColumn<std::string>("definition");
 
         std::vector<std::string> words = document.GetColumn<std::string>("word");
+
+        assert(definitions.size() == words.size());
 
         for (auto word = words.begin(); word != words.end(); ++word) {
             long index = std::distance(words.begin(), word);
@@ -58,7 +63,15 @@ public:
     }
 
     std::string lookup(std::string word_to_search) {
-        std::size_t desired_hash = hasher(word_to_search);
+        // https://stackoverflow.com/questions/13130359/why-is-stdbad-cast-thrown-by-boostlocale
+        // The lines below are needed for boost
+        boost::locale::generator gen;
+        std::locale loc = gen("");
+        std::locale::global(loc);
+
+        // Using boost separately for just this single line of code was kind of overkill, but C++ is stupid for not having a built in capitalize() method
+        // like Rails does..
+        std::size_t desired_hash = hasher(boost::locale::to_title(word_to_search));
 
         auto result = dictionary_table.find(desired_hash);
 
