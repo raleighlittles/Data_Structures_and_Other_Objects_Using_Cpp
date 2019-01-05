@@ -15,12 +15,11 @@ namespace Sorter
 {
     const std::size_t ASCII_LENGTH = 256;
 
-    // use this: https://www.sanfoundry.com/cpp-program-implement-radix-sort/
-    // but you'll need 256 buckets (ASCII), and insert values in e list according to their ASCII character chart
-
+/*
+ *  Returns the length of the longest word in the array.
+ */
     size_t max_word_length(std::vector<std::string> unsorted_list_of_words)
     {
-        // The
         std::sort(unsorted_list_of_words.begin(), unsorted_list_of_words.end(),
                 [](const std::string &s1, const std::string  &s2) -> bool
                 {
@@ -33,9 +32,9 @@ namespace Sorter
 
     void counting_radix_sort(std::vector<std::string>& unsorted_list, std::size_t string_position)
     {
-        // count the number of strings that have the current character at that same position
         std::array<std::size_t, ASCII_LENGTH> counts = {0};
         std::vector<std::string> output;
+        // Learn the difference between resize and reserve!
         output.resize(unsorted_list.size());
 
         for (auto word : unsorted_list)
@@ -44,7 +43,6 @@ namespace Sorter
            // C++ has a bug that doesn't let you convert a one-length string into an integer, but since each element of a string
            // is a character, and character -> int static casts work, you have to manually select an index from the string
            int ascii_value_of_letter = static_cast<int>(letter_at_string_position[0]);
-           std::cout << "ascii value of letter " << ascii_value_of_letter << std::endl;
            counts[ascii_value_of_letter]++;
         }
 
@@ -60,7 +58,6 @@ namespace Sorter
             int ascii_value_of_letter = static_cast<int>(letter_at_string_position[0]);
 
             size_t second_index = counts[ascii_value_of_letter] - 1;
-            //output.at(second_index) = current_element;
             output.at(second_index) = current_element;
             counts[ascii_value_of_letter]--;
         }
