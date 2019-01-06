@@ -17,9 +17,9 @@ public:
 // CONSTRUCTOR and DESTRUCTOR
     Game() { move_number = 0; }
 
-    virtual ~Game() {}
+    virtual ~Game() = default;
 
-// PUBLIC MEMBER FUNCTIONS
+    // PUBLIC MEMBER FUNCTIONS
 // The play function should not be overridden. It plays one game, with the human player
 // moving first and the computer second. The computer uses an alpha-beta look ahead
 // algorithm to select its moves. The return value is the winner of the game (or

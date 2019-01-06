@@ -6,6 +6,7 @@
 #define CHAPTER_14_TICTACTWO_H
 
 #include "game.h"
+#include "boost/multi_array.hpp"
 
 /*
  Problem statement
@@ -44,6 +45,30 @@ from Section 14.3 as your base class.
  */
 class TicTacTwo : public Game {
     // Code goes here
+public:
+    TicTacTwo() {
+        // set all positions on the board to neutral
+        for (std::size_t row = 0; row < board1.shape()[0]; row++) {
+            for (std::size_t column = 0; column < board1.shape()[1]; column++) {
+                board1[row][column] = who::NEUTRAL;
+            }
+        }
+    }
+
+
+private:
+    const static int BOARD_ROWS = 4;
+    const static int BOARD_COLUMNS = 4;
+
+    boost::multi_array<who, 2> board1(boost::extents[BOARD_ROWS][BOARD_COLUMNS]);
+
+    boost::multi_array<who, 2> board2(boost::extents[BOARD_ROWS][BOARD_COLUMNS]);
+
+
+
+
+
+
 };
 
 #endif //CHAPTER_14_TICTACTWO_H
