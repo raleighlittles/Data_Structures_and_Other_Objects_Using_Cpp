@@ -43,29 +43,134 @@ Tac-Twice against the computer. Use the game class
 from Section 14.3 as your base class.
 
  */
-class TicTacTwo : public Game {
-    // Code goes here
+class TicTacTwo : public Game
+{
 public:
-    TicTacTwo() {
-        // set all positions on the board to neutral
-        for (std::size_t row = 0; row < board1.shape()[0]; row++) {
-            for (std::size_t column = 0; column < board1.shape()[1]; column++) {
-                board1[row][column] = who::NEUTRAL;
-            }
-        }
+    TicTacTwo()
+    {
+
+        initialize_array();
+
+        set_all_elements_to_neutral();
+
     }
 
 
 private:
-    const static int BOARD_ROWS = 4;
-    const static int BOARD_COLUMNS = 4;
+    static const size_t BOARD_ROWS = 4;
+    static const size_t BOARD_COLUMNS = 4;
 
-    boost::multi_array<who, 2> board1(boost::extents[BOARD_ROWS][BOARD_COLUMNS]);
+    boost::multi_array<who, 2> board1;
+    boost::multi_array<who, 2> board2;
 
-    boost::multi_array<who, 2> board2(boost::extents[BOARD_ROWS][BOARD_COLUMNS]);
+    void initialize_array()
+    {
+        boost::array < boost::multi_array<who, 2>::index, 2 > dimensions = {{BOARD_ROWS, BOARD_COLUMNS}};
+
+        board1.reshape(dimensions);
+
+        board2.reshape(dimensions);
+    }
+
+    void set_all_elements_to_neutral()
+    {
+        assert(board1.shape() == board2.shape());
+
+        for (std::size_t row = 0; row < board1.shape()[0]; row++)
+        {
+            for (std::size_t column = 0; column < board1.shape()[1]; column++)
+            {
+                board1[row][column] = who::NEUTRAL;
+                board2[row][column] = who::NEUTRAL;
+            }
+        }
+
+    }
+
+    std::pair<int, int> convert_coordinates(int row, int column)
+    { // TODO: Refactor this
+        auto board_1_coordinates = std::make_pair(row, column);
+
+        // TODO: assert that board_1 coordainates in valid range
+
+        // can only switch on integer-evaluable type
+        switch (board_1_coordinates.first)
+        {
+            case (1):
+            {
+
+                if (board_1_coordinates.second == 1)
+                {
+                    // (1,1) maps to (3,4)
+                    return std::make_pair(3, 4);
+                }
+
+                else if (board_1_coordinates.second == 2)
+                {
+                    // (1,2) maps to (1,1)
+                    return std::make_pair(1,1);
+                }
+
+                else if (board_1_coordinates.second == 3)
+                {
+                    // (1,3) maps to (2,3)
+                    return std::make_pair(2,3);
+                }
+
+                else if (board_1_coordinates.second == 4)
+                {
+                    // (1,4) maps to (4,2)
+                    return std::make_pair(4,2);
+                }
+
+            }
+
+            case(2):
+            {
+                if (board_1_coordinates.second == 1)
+                {
+                    // (2,1) maps to (2,2)
+                    return std::make_pair(2,2);
+                }
+
+                else if (board_1_coordinates.second == 2)
+                {
+                    // (2,2) maps to (4,3)
+                    return std::make_pair(2,3);
+                }
+
+                else if (board_1_coordinates.second == 3)
+                {
+                    // (2,3) maps to (3,1)
+                    return std::make_pair(3,1);
+                }
+
+                else if (board_1_coordinates.second == 4)
+                {
+                    // (2,4) maps to (1,4)
+                    return std::make_pair(1,4);
+                }
+            }
+
+            case (3):
+            {
+                // TODO: Put switch statement here
+            }
 
 
+            case (4):
+            {
+                // TODO: Put switch statement here
+            }
 
+            default:
+            {
+
+                break;
+            }
+        }
+
+    }
 
 
 
