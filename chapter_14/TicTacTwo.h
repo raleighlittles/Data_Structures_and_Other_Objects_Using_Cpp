@@ -48,13 +48,55 @@ class TicTacTwo : public Game
 public:
     TicTacTwo()
     {
-
         initialize_array();
 
         set_all_elements_to_neutral();
-
     }
 
+protected:
+    void make_move(const std::string &move) override
+    {
+        // Moves are space-separated coordinates in the form "r c" where
+        // r and c are the row and column positions that the user wants to place
+        // their symbol on
+
+        // Find out whoever's turn it is and get their symbol
+        // Take their requested coordinates, mark it on both boards
+    }
+
+    void restart() override
+    {
+        // Reset move number to 0
+        // set_all_elements_to_neutral()
+    }
+
+    TicTacTwo* clone() const override
+    {
+        // Use the copy constructor to create a new Game object
+        // return pointer to it
+    }
+
+    void compute_moves(std::queue<std::string> &moves) const override
+    {
+        // Examine the first board to see which positions are not occupied
+    }
+
+    void display_status() const override
+    {
+        // Print out the number of row-adjacent (meaning either in a row, column,
+        // or diagonal) elements each user has on both boards
+    }
+
+    bool is_game_over() const override
+    {
+        // Count of the number of row-adjacent elements each user has and return true if it equals 4
+    }
+
+    bool is_legal(const std::string &move) const override
+    {
+        // Make sure the position (again in the same format as before) is not already
+        // occupied
+    }
 
 private:
     static const size_t BOARD_ROWS = 4;
@@ -91,86 +133,94 @@ private:
     { // TODO: Refactor this
         auto board_1_coordinates = std::make_pair(row, column);
 
-        // TODO: assert that board_1 coordainates in valid range
+        // TODO: assert that board_1 coordinates in valid range
 
         // can only switch on integer-evaluable type
         switch (board_1_coordinates.first)
         {
             case (1):
             {
+                switch (board_1_coordinates.second)
+                { // coordinates are in (row, column) layout
+                    case (1) : return std::make_pair(3, 4); break;
 
-                if (board_1_coordinates.second == 1)
-                {
-                    // (1,1) maps to (3,4)
-                    return std::make_pair(3, 4);
-                }
+                    case (2): return std::make_pair(1, 1); break;
 
-                else if (board_1_coordinates.second == 2)
-                {
-                    // (1,2) maps to (1,1)
-                    return std::make_pair(1,1);
-                }
+                    case (3) : return std::make_pair(2, 3); break;
 
-                else if (board_1_coordinates.second == 3)
-                {
-                    // (1,3) maps to (2,3)
-                    return std::make_pair(2,3);
-                }
+                    case (4) : return std::make_pair(4, 2); break;
 
-                else if (board_1_coordinates.second == 4)
-                {
-                    // (1,4) maps to (4,2)
-                    return std::make_pair(4,2);
+                    // TODO: Change this to the correct error
+                    default: exit(1);
                 }
 
             }
 
             case(2):
             {
-                if (board_1_coordinates.second == 1)
+                switch (board_1_coordinates.second)
                 {
-                    // (2,1) maps to (2,2)
-                    return std::make_pair(2,2);
-                }
+                    case (1): return std::make_pair(2, 2); break;
 
-                else if (board_1_coordinates.second == 2)
-                {
-                    // (2,2) maps to (4,3)
-                    return std::make_pair(2,3);
-                }
+                    case (2):  return std::make_pair(4, 3); break;
 
-                else if (board_1_coordinates.second == 3)
-                {
-                    // (2,3) maps to (3,1)
-                    return std::make_pair(3,1);
-                }
+                    case (3): return std::make_pair(3, 1); break;
 
-                else if (board_1_coordinates.second == 4)
-                {
-                    // (2,4) maps to (1,4)
-                    return std::make_pair(1,4);
+                    case (4) : return std::make_pair(1, 4); break;
+
+                        // TODO: Change this to the correct error
+                    default: exit(1);
                 }
             }
 
             case (3):
             {
                 // TODO: Put switch statement here
+
+                switch (board_1_coordinates.second)
+                {
+                    case (1) : return std::make_pair(4, 1); break;
+
+                    case (2) : return std::make_pair(2, 4); break;
+
+                    case (3) : return std::make_pair(1, 2); break;
+
+                    case (4) : return std::make_pair(3, 3); break;
+
+                    default: exit(1);
+                }
+
             }
 
 
             case (4):
             {
                 // TODO: Put switch statement here
+
+                switch(board_1_coordinates.second)
+                {
+                    case (1) : return std::make_pair(1, 3); break;
+
+                    case (2) : return std::make_pair(3, 2); break;
+
+                    case (3) : return std::make_pair(4, 4); break;
+
+                    case (4) : return std::make_pair(2, 1); break;
+
+                    default: exit(1);
+                }
             }
 
             default:
             {
 
-                break;
+                exit(1);
             }
         }
 
     }
+
+    // TODO: Add copy-constructor
 
 
 
