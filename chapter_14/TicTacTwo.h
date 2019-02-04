@@ -77,8 +77,11 @@ protected:
     }
 
     void compute_moves(std::queue<std::string> &moves) const override
-    {
+    { // The parameter for this function seems kind of useless ; I don't understand why it was used
         // Examine the first board to see which positions are not occupied
+
+        retrieve_neutral_coordinates();
+
     }
 
     void display_status() const override
@@ -96,6 +99,13 @@ protected:
     {
         // Make sure the position (again in the same format as before) is not already
         // occupied
+
+        compute_moves(/* put the correct type in here */);
+
+        std::vector<std::pair<int, int>> available_moves = retrieve_neutral_coordinates();
+
+        // convert the move into a pair of ints and make sure that pair is in the vector returned above
+        
     }
 
 private:
@@ -222,6 +232,26 @@ private:
 
     // TODO: Add copy-constructor
 
+    /*
+     * @brief Returns coordinates that are available (on the first board)
+     */
+    std::vector<std::pair<int, int>> retrieve_neutral_coordinates() const
+    {
+        std::vector<std::pair<int, int>> neutral_coordinates;
+
+        for (std::size_t row = 0; row < board1.shape()[0]; row++)
+        {
+            for (std::size_t column = 0; column < board1.shape()[1]; column++)
+            {
+                if (board1[row][column] == who::NEUTRAL)
+                {
+                    neutral_coordinates.emplace_back(std::make_pair<int, int>(row, column));
+                }
+            }
+        }
+
+        return neutral_coordinates;
+    }
 
 
 };
