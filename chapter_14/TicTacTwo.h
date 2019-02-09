@@ -60,8 +60,28 @@ protected:
         // r and c are the row and column positions that the user wants to place
         // their symbol on
 
+        // TODO: Extract this into its own function
+        std::istringstream iss(move);
+
+        std::vector<std::string> raw_coordinates(( std::istream_iterator<std::string>(iss)),
+                                                std::istream_iterator<std::string>());
+
+        assert(raw_coordinates.size() == 2);
+
+        std::pair<int, int> new_coordinates = std::make_pair<int, int>(stoi(raw_coordinates[0]),
+                                                                        stoi(raw_coordinates[1]));
+
+        std::pair<int, int> converted_coordinates = convert_coordinates(new_coordinates.first, new_coordinates.second);
+
         // Find out whoever's turn it is and get their symbol
+
+        who mover = current_mover();
+
         // Take their requested coordinates, mark it on both boards
+
+        board1[new_coordinates.first][new_coordinates.second] = mover;
+
+        board1[converted_coordinates.first][new_coordinates.second] = mover;
     }
 
     void restart() override
@@ -105,12 +125,28 @@ protected:
         std::vector<std::pair<int, int>> available_moves = retrieve_neutral_coordinates();
 
         // convert the move into a pair of ints and make sure that pair is in the vector returned above
-        
+
+    }
+
+    who last_mover() const override
+    {
+
+    }
+
+    int moves_completed() const override
+    {
+
+    }
+
+    who winning() const override
+    {
+
     }
 
 private:
     static const size_t BOARD_ROWS = 4;
     static const size_t BOARD_COLUMNS = 4;
+    static const uint8_t WINNING_SCORE = 4;
 
     boost::multi_array<who, 2> board1;
     boost::multi_array<who, 2> board2;
@@ -232,6 +268,27 @@ private:
 
     // TODO: Add copy-constructor
 
+    // read: https://theboostcpplibraries.com/boost.multiarray
+    std::vector<std::pair<who, int>> compute_scores()
+    { // Computes the scores for each player
+
+        // For each row, column, and the two diagonals..
+        // count the number of entries by each player -- the maximum of these is their score
+
+        std::vector<std::pair<who, int>> scores;
+
+         typedef boost::multi_array<who, BOARD_ROWS>::array_view<1>::type row_type;
+         typedef boost::multi_array_types::index_range range_type;
+
+        for (std::size_t row_number = 0; row_number < BOARD_ROWS; row_number++)
+        {
+            row_type current_row_first_board = board1[boost::indices[row_number][range_type{0, 3}]];
+        }
+
+
+
+    }
+
     /*
      * @brief Returns coordinates that are available (on the first board)
      */
@@ -252,6 +309,14 @@ private:
 
         return neutral_coordinates;
     }
+
+
+    who current_mover()
+    {
+        return (last_mover() == who::HUMAN) ? who::COMPUTER : who::HUMAN;
+    }
+
+
 
 
 };

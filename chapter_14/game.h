@@ -12,7 +12,9 @@ class Game {
 public:
 // ENUM TYPE
     enum class who {
-        HUMAN, NEUTRAL, COMPUTER
+        HUMAN,
+        NEUTRAL,
+        COMPUTER
     }; // Possible game outcomes
 // CONSTRUCTOR and DESTRUCTOR
     Game() { move_number = 0; }
