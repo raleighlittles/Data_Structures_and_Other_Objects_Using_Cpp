@@ -277,12 +277,47 @@ private:
 
         std::vector<std::pair<who, int>> scores;
 
-         typedef boost::multi_array<who, BOARD_ROWS>::array_view<1>::type row_type;
+
+         typedef boost::multi_array<who, BOARD_ROWS>::array_view<1>::type row_or_column_type;
          typedef boost::multi_array_types::index_range range_type;
+
+         std::pair<who, int> human_scores = std::make_pair<who, int>(who::HUMAN, 0);
+        std::pair<who, int> computer_scores = std::make_pair<who, int>(who::COMPUTER, 0);
+
+        std::array<long, 2> human_scores_per_board;
+        std::array<long, 2> computer_scores_per_board;
+
 
         for (std::size_t row_number = 0; row_number < BOARD_ROWS; row_number++)
         {
-            row_type current_row_first_board = board1[boost::indices[row_number][range_type{0, 3}]];
+            row_or_column_type current_row_first_board = board1[boost::indices[row_number][range_type{ static_cast<int>(BOARD_ROWS * row_number), static_cast<int>(BOARD_ROWS * row_number + 3)}]];
+
+            row_or_column_type current_row_second_board = board2[boost::indices[row_number][range_type{ static_cast<int>(BOARD_ROWS * row_number), static_cast<int>(BOARD_ROWS * row_number + 3)}]];
+
+             human_scores_per_board =  {
+                    std::count(current_row_first_board.begin(), current_row_first_board.end(), who::HUMAN),
+                    std::count(current_row_second_board.begin(), current_row_second_board.end(), who::HUMAN) };
+
+
+            computer_scores_per_board = {
+                    std::count(current_row_first_board.begin(), current_row_first_board.end(), who::COMPUTER),
+                    std::count(current_row_second_board.begin(), current_row_second_board.end(), who::COMPUTER) };
+
+            if (*std::max_element(human_scores_per_board.begin(), human_scores_per_board.end()) > human_scores.second)
+            {
+                human_scores.second = *std::max_element(human_scores_per_board.begin(), human_scores_per_board.end());
+            }
+
+            if (*std::max_element(computer_scores_per_board.begin(), computer_scores_per_board.end()) > computer_scores.second)
+            {
+                computer_scores.second = *std::max_element(human_scores_per_board.begin(), human_scores_per_board.end());
+            }
+        }
+
+        for (std::size_t column_number = 0; column_number < BOARD_COLUMNS; column_number++ )
+        {
+
+            // same thing as row
         }
 
 
