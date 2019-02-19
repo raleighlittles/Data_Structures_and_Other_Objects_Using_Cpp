@@ -145,19 +145,34 @@ protected:
 
 private:
     static const size_t BOARD_ROWS = 4;
-    static const size_t BOARD_COLUMNS = 4;
+    static const size_t BOARD_COLUMNS = BOARD_ROWS;
     static const uint8_t WINNING_SCORE = 4;
+    using array_type_2D = boost::multi_array<who, 2>;
+    using array_type_2D_index = array_type_2D::index;
 
-    boost::multi_array<who, 2> board1;
-    boost::multi_array<who, 2> board2;
+    array_type_2D board1;
+    array_type_2D board2;
+
+    //boost::multi_array<who, 2> board1;
+    //boost::multi_array<who, 2> board2;
+
+    // array_type_2D board1(boost::extents[BOARD_ROWS][BOARD_COLUMNS]);
 
     void initialize_array()
     {
-        boost::array < boost::multi_array<who, 2>::index, 2 > dimensions = {{BOARD_ROWS, BOARD_COLUMNS}};
+        //boost::array < boost::multi_array<who, 2>::index, 2 > dimensions = {{BOARD_ROWS, BOARD_COLUMNS}};
 
-        board1.reshape(dimensions);
+        // board1.reshape(dimensions);
 
-        board2.reshape(dimensions);
+        array_type_2D board1(boost::extents[BOARD_ROWS][BOARD_COLUMNS]);
+
+        array_type_2D board2(boost::extents[BOARD_ROWS][BOARD_COLUMNS]);
+
+        //board1.reshape(boost::extents[BOARD_ROWS][BOARD_COLUMNS]);
+
+        //board2.reshape(boost::extents[BOARD_ROWS][BOARD_COLUMNS]);
+
+        // board2.reshape(dimensions);
     }
 
     void set_all_elements_to_neutral()
@@ -287,6 +302,7 @@ private:
         std::array<long, 2> human_scores_per_board;
         std::array<long, 2> computer_scores_per_board;
 
+        // TODO: Refactor the next two for loops
 
         for (std::size_t row_number = 0; row_number < BOARD_ROWS; row_number++)
         {
@@ -320,8 +336,11 @@ private:
             // same thing as row
         }
 
+        // For the diagonal case, iterate 
 
 
+        scores = { human_scores, computer_scores};
+        return scores;
     }
 
     /*
