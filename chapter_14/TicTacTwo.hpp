@@ -9,38 +9,38 @@
 #include "boost/multi_array.hpp"
 
 /*
- Problem statement
+     Problem statement
 
- Tic-Tac-Twice is a game invented by Pat
-Baggett and Andrzej Ehrenfeucht. It is
-distributed by the Aristoplay company. The
-rules are simple, starting with two 4x4 boards that
-each have a pattern of 16 letters (or other objects). If
-you use the letters A through P, then the two boards
-have these patterns:
-Board 1
-Board 2
-8
-A B C D B K M H
-E F G H P E C J
-I J K L G N L A
-M N O P I D F O
-The two players (human and computer) take alter-
-nate turns. During your turn, you can place a checker
-of your color on an empty spot on Board 1. At the
-same time, you put a checker of your color on the
-square in Block 2 with the same letter. For example,
-if you put your checker in the bottom-left corner of
-Board 1 (letter M), then you would simultaneously
-put one of your checkers on the third spot of the top
-row of Board 2 (also letter M).
-You win the game by having four of your circles
-in a row (horizontally, diagonally, or vertically) on
-either of the boards. Note that you don’t need four in
-a row on both boards, just on one of them.
-Implement a class that lets a user play Tic-
-Tac-Twice against the computer. Use the game class
-from Section 14.3 as your base class.
+     Tic-Tac-Twice is a game invented by Pat
+    Baggett and Andrzej Ehrenfeucht. It is
+    distributed by the Aristoplay company. The
+    rules are simple, starting with two 4x4 boards that
+    each have a pattern of 16 letters (or other objects). If
+    you use the letters A through P, then the two boards
+    have these patterns:
+    Board 1
+    Board 2
+    8
+    A B C D B K M H
+    E F G H P E C J
+    I J K L G N L A
+    M N O P I D F O
+    The two players (human and computer) take alter-
+    nate turns. During your turn, you can place a checker
+    of your color on an empty spot on Board 1. At the
+    same time, you put a checker of your color on the
+    square in Block 2 with the same letter. For example,
+    if you put your checker in the bottom-left corner of
+    Board 1 (letter M), then you would simultaneously
+    put one of your checkers on the third spot of the top
+    row of Board 2 (also letter M).
+    You win the game by having four of your circles
+    in a row (horizontally, diagonally, or vertically) on
+    either of the boards. Note that you don’t need four in
+    a row on both boards, just on one of them.
+    Implement a class that lets a user play Tic-
+    Tac-Twice against the computer. Use the game class
+    from Section 14.3 as your base class.
 
  */
 class TicTacTwo : public Game
@@ -135,7 +135,7 @@ protected:
 
     int moves_completed() const override
     {
-
+        return moves;
     }
 
     who winning() const override
@@ -147,6 +147,8 @@ private:
     static const size_t BOARD_ROWS = 4;
     static const size_t BOARD_COLUMNS = BOARD_ROWS;
     static const uint8_t WINNING_SCORE = 4;
+    unsigned int moves;
+
     using array_type_2D = boost::multi_array<who, 2>;
     using array_type_2D_index = array_type_2D::index;
 
@@ -284,6 +286,7 @@ private:
     // TODO: Add copy-constructor
 
     // read: https://theboostcpplibraries.com/boost.multiarray
+    // read: http://boost.2283326.n4.nabble.com/multi-array-how-can-I-efficiently-have-a-column-selected-td2599360.html
     std::vector<std::pair<who, int>> compute_scores()
     { // Computes the scores for each player
 
@@ -306,9 +309,10 @@ private:
 
         for (std::size_t row_number = 0; row_number < BOARD_ROWS; row_number++)
         {
-            row_or_column_type current_row_first_board = board1[boost::indices[row_number][range_type{ static_cast<int>(BOARD_ROWS * row_number), static_cast<int>(BOARD_ROWS * row_number + 3)}]];
+            row_or_column_type current_row_first_board = board1[boost::indices[row_number][range_type{ 0,
+                                                                                           static_cast<int>(BOARD_ROWS )}]];
 
-            row_or_column_type current_row_second_board = board2[boost::indices[row_number][range_type{ static_cast<int>(BOARD_ROWS * row_number), static_cast<int>(BOARD_ROWS * row_number + 3)}]];
+            row_or_column_type current_row_second_board = board2[boost::indices[row_number][range_type{ 0, static_cast<int>(BOARD_ROWS)}]];
 
              human_scores_per_board =  {
                     std::count(current_row_first_board.begin(), current_row_first_board.end(), who::HUMAN),
@@ -332,15 +336,39 @@ private:
 
         for (std::size_t column_number = 0; column_number < BOARD_COLUMNS; column_number++ )
         {
+            // I dont think you have to increment the number of entries each time
+            row_or_column_type current_column_first_board = board1[boost::indices[range_type(0, BOARD_COLUMNS) ][column_number]];
 
-            // same thing as row
+            row_or_column_type current_column_second_board = board2[boost::indices[range_type(0, BOARD_COLUMNS) ] [column_number]];
+
+            human_scores_per_board = {
+                    std::count(current_column_first_board.begin(), current_column_first_board.end(), who::HUMAN),
+                    std::count(current_column_second_board.begin(), current_column_second_board.end(), who::HUMAN)
+            };
+
+            computer_scores_per_board = {
+                    std::count(current_column_first_board.begin(), current_column_first_board.end(), who::COMPUTER),
+                    std::count(current_column_second_board.begin(), current_column_second_board.end(), who::COMPUTER)
+            };
+
+            if (*std::max_element(human_scores_per_board.begin(), human_scores_per_board.end()) > human_scores.second)
+            {
+                human_scores.second = *std::max_element(human_scores_per_board.begin(), human_scores_per_board.end());
+            }
+
+            if (*std::max_element(computer_scores_per_board.begin(), computer_scores_per_board.end()) > computer_scores.second)
+            {
+                computer_scores.second = *std::max_element(human_scores_per_board.begin(), human_scores_per_board.end());
+            }
+
         }
 
-        // For the diagonal case, iterate 
+        // For the diagonal case, iterate
+
+        row_or_column_type diagonal = 
 
 
-        scores = { human_scores, computer_scores};
-        return scores;
+        return { human_scores, computer_scores};
     }
 
     /*
