@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.12)
 project(chapter_14)
 
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wpedantic -g -O0")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wpedantic -Werror")
+set(CMAKE_CXX_FLAGS "-g -O0 -v")
 
 find_package(Boost COMPONENTS locale REQUIRED)
 include_directories("usr/lib/")

@@ -5,6 +5,10 @@
 #ifndef CHAPTER_14_TICTACTWO_H
 #define CHAPTER_14_TICTACTWO_H
 
+#include <iostream>
+#include <type_traits>
+#include <utility>
+#include <algorithm>
 #include "game.h"
 #include "boost/multi_array.hpp"
 
@@ -87,7 +91,10 @@ protected:
     void restart() override
     {
         // Reset move number to 0
-        // set_all_elements_to_neutral()
+        moves = 0;
+        // TODO: Make sure not to check who last moved if the move count is 0
+        set_all_elements_to_neutral();
+
     }
 
     TicTacTwo* clone() const override
@@ -108,29 +115,119 @@ protected:
     {
         // Print out the number of row-adjacent (meaning either in a row, column,
         // or diagonal) elements each user has on both boards
+
+        std::cout << "Current Game Status " << std::endl
+        << std::string("=", 10) << std::endl;
+
+        std::cout << "Human: " << this->human_score << " points"
+        << "(" << WINNING_SCORE - this->human_score << " more to win )" << std::endl;
+
+        std::cout << "Computer: " << this->computer_score << " points"
+        << "(" <<  WINNING_SCORE - this->computer_score << " more to win )" << std::endl;
+
+        std::cout << std::string("-", 10) << std::endl;
     }
 
     bool is_game_over() const override
     {
         // Count of the number of row-adjacent elements each user has and return true if it equals 4
+        return (this->human_score == WINNING_SCORE) || (this->computer_score == WINNING_SCORE);
     }
 
+    /
     bool is_legal(const std::string &move) const override
     {
         // Make sure the position (again in the same format as before) is not already
         // occupied
 
-        compute_moves(/* put the correct type in here */);
+        //std::queue<std::string> unused;
+
+        typedef std::queue<std::string> arg;
+
+        //compute_moves(&&std::queue<std::string>());
+
+        // compute_moves(static_cast<&std::queue<std::string>>(std::queue<std::string>()));
+
+        // compute_moves(std::move(std::queue<std::string>()));
+
+        /*
+         * There's a good lesson about rvalues and lvalues in this next line.
+         * Basically when a function is declared as:
+         *
+         *  void function(int& a);
+         *
+         *  That means the function is taking in a reference to an l-value. If you
+         *  try to call this function using, for example, a constant integer, such as:
+         *
+         *  function(0);
+         *
+         *  then you'll get an error -- something along the lines of:
+         *  " note: candidate function not viable: expects an l-value for 1st argument "
+         *  or error: cannot bind non-const lvalue reference of type 'int&' to an rvalue of type 'int'
+         *
+         *  Here, 0 is the rvalue type, and the error message is telling us that the function takes in a l-value
+         *  reference, and in the case specifically of GCC, that it can't bind this rvalue into a non-const lvalue reference.
+         *  This is reasonable, as it would cause issues if you could, as this would open up the possiblity of
+         *  getting something weird like "0 == 1" (not going into it here, but you can see examples on Stack Overflow).
+         *
+         *  As a workaround, rvalue references were introduced in C++14. You could change your function's signature to
+         *  be: void function(int&& a);  -- notice the double ampersands.
+         *
+         *  Then, function(0); will no longer generate a compiler error. Sweet!
+         *
+         *  The problem is that in this case, "compute_moves" was a function marked with override, and changing the
+         *  calling signature (even if its just changing from an lvalue reference to an rvalue reference) would break
+         *  compilation as it would no longer be overriding the virtual function in the parent class (technically these
+         *  would be two different functions then!).
+         *
+         *  So, since I can't change the function signature to accept r-values, and given that I don't want to use the
+         *  parameter to that function, what are my options?
+         *
+         *  Well, I could always just have instantiated a variable for that function parameter and called it "unused",
+         *  or something, but that's no fun -- after all, why give a variable a name if it is unused? Furthermore worse
+         *  yet, that potentially could have generated a warning about an unused variable -- or likely the compiler might
+         *  have optimized it out.
+         *
+         *  But where's the fun in that?
+         *
+         */
+        compute_moves (std::add_lvalue_reference<std::queue<std::string>>::type
+                      ( std::forward<std::queue<std::string>>(std::queue<std::string>())));
 
         std::vector<std::pair<int, int>> available_moves = retrieve_neutral_coordinates();
 
         // convert the move into a pair of ints and make sure that pair is in the vector returned above
 
+        std::istringstream iss(move);
+
+       std::vector<int> raw_coordinates(( stoi(std::istream_iterator<std::string>(iss))),
+                                                 stoi(std::istream_iterator<std::string>()));
+
+        assert(raw_coordinates.size() == 2);
+
+        std::pair<int, int> desired_coordinates_for_move = std::make_pair(raw_coordinates);
+
+        return (std::find(available_moves.begin(), available_moves.end(), desired_coordinates_for_move) != -1);
+
     }
 
     who last_mover() const override
     {
+        /* Remember that since the human moves first, and the starting move number is 0...
+        then if the move count is an even number (greater than 0), it means the computer went on the last turn, or vice
+         versa.
 
+         Move # | Whose turn it is to move
+         ---------------------------------
+         0      | Human
+         1      | Computer
+         2      | Human
+         3      | Computer
+
+            (and so on..)
+        */
+
+        return (moves % 2 == 0) ? who::COMPUTER : who::HUMAN;
     }
 
     int moves_completed() const override
@@ -140,14 +237,23 @@ protected:
 
     who winning() const override
     {
+        if (this->human_score > this->computer_score)
+        {
+            return who::HUMAN;
 
+        }
+
+        return who::COMPUTER;
     }
 
 private:
     static const size_t BOARD_ROWS = 4;
     static const size_t BOARD_COLUMNS = BOARD_ROWS;
-    static const uint8_t WINNING_SCORE = 4;
-    unsigned int moves;
+    static const uint8_t WINNING_SCORE = BOARD_COLUMNS;
+
+    unsigned int human_score;
+    unsigned int computer_score;
+    unsigned int moves = 0;
 
     using array_type_2D = boost::multi_array<who, 2>;
     using array_type_2D_index = array_type_2D::index;
@@ -305,7 +411,7 @@ private:
         std::array<long, 2> human_scores_per_board;
         std::array<long, 2> computer_scores_per_board;
 
-        // TODO: Refactor the next two for loops
+        // TODO: Refactor the next 3 for loops (that handle row, column, diagonal scoring)
 
         for (std::size_t row_number = 0; row_number < BOARD_ROWS; row_number++)
         {
@@ -363,11 +469,44 @@ private:
 
         }
 
-        // For the diagonal case, iterate
+        /* Wasn't able to figure out how to dynamically access the diagonal of a matrix using multi-array, so
+         * I used a vector as a workaround */
 
-        row_or_column_type diagonal = 
+        std::vector<who> diagonal_board1(BOARD_COLUMNS);
+
+        std::vector<who> diagonal_board2(BOARD_COLUMNS);
+
+        int i = -1;
+
+        /* Remember that the "()" operator on a lambda is inherently const, so to capture a variable by-copy in a lambda
+         * you must use the "mutable" lambda specifier : https://en.cppreference.com/w/cpp/language/lambda */
+        std::generate(diagonal_board1.begin(), diagonal_board1.end(), [=]() mutable { return i++, board1[i][i]; });
+
+        std::generate(diagonal_board2.begin(), diagonal_board2.end(), [=]() mutable { return i++, board2[i][i]; });
 
 
+        human_scores_per_board = {
+                std::count(diagonal_board1.begin(), diagonal_board1.end(), who::HUMAN),
+                std::count(diagonal_board2.begin(), diagonal_board2.end(), who::HUMAN)
+        };
+
+        computer_scores_per_board = {
+                std::count(diagonal_board1.begin(), diagonal_board1.end(), who::COMPUTER),
+                std::count(diagonal_board2.begin(), diagonal_board2.end(), who::COMPUTER)
+        };
+
+        if (*std::max_element(human_scores_per_board.begin(), human_scores_per_board.end()) > human_scores.second)
+        {
+            human_scores.second = *std::max_element(human_scores_per_board.begin(), human_scores_per_board.end());
+        }
+
+        if (*std::max_element(computer_scores_per_board.begin(), computer_scores_per_board.end()) > computer_scores.second)
+        {
+            computer_scores.second = *std::max_element(human_scores_per_board.begin(), human_scores_per_board.end());
+        }
+
+        this->human_score = human_scores.second;
+        this->computer_score = computer_scores.second;
         return { human_scores, computer_scores};
     }
 
