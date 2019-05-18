@@ -6,6 +6,34 @@
 
 #include "TicTacTwo.h"
 
+// ********************
+// HELPER FUNCTIONS
+// ********************
+
+std::array<Game::who, TicTacTwo::NUMBER_OF_ROWS> TicTacTwo::get_row(uint row_index)
+{
+
+}
+
+
+std::array<Game::who, TicTacTwo::NUMBER_OF_COLUMNS> TicTacTwo::get_column(uint column_index)
+{
+
+}
+
+
+
+
+std::array<Game::who, TicTacTwo::NUMBER_OF_ROWS> TicTacTwo::get_diagonal()
+{
+
+}
+
+
+// *************
+// OVERRIDDEN FUNCTIONS
+// **************
+
 /**
  * Compute all the moves that the next player can make
  *
@@ -76,3 +104,4 @@ void TicTacTwo::restart()
 {
 
 }
+

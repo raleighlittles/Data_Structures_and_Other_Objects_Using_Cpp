@@ -23,13 +23,12 @@
     each have a pattern of 16 letters (or other objects). If
     you use the letters A through P, then the two boards
     have these patterns:
-    Board 1
-    Board 2
-    8
-    A B C D B K M H
-    E F G H P E C J
-    I J K L G N L A
-    M N O P I D F O
+    Board 1      Board 2
+
+    A B C D      B K M H
+    E F G H      P E C J
+    I J K L      G N L A
+    M N O P      I D F O
     The two players (human and computer) take alter-
     nate turns. During your turn, you can place a checker
     of your color on an empty spot on Board 1. At the
@@ -93,6 +92,17 @@ protected:
     void make_move(const std::string& move) override;
     // Restart the game from the beginning:
     void restart( ) override;
+
+private:
+    // Helper functions
+
+    std::array<Game::who, NUMBER_OF_ROWS> get_row(uint row_index);
+
+    std::array<Game::who, NUMBER_OF_COLUMNS> get_column(uint column_index);
+
+    std::array<Game::who, NUMBER_OF_COLUMNS> get_diagonal();
+
+    void neutralize_boards();
 
 
 };
