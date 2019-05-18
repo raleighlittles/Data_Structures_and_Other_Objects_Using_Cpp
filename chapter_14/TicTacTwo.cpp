@@ -2,6 +2,7 @@
 #include <iostream>
 #include <algorithm>
 #include <sstream>
+#include <iomanip>
 
 
 #include "TicTacTwo.h"
@@ -245,7 +246,33 @@ void TicTacTwo::display_status() const
 {
     int row, column;
 
-    std::cout << std::endl << "Current Game status (Human = X, Computer = O)" << std::endl;
+    std::cout << std::endl << "Current Game status (Human = " << human_player_representation << ", Computer = " << computer_player_representation << ")" << std::endl;
+
+    std::cout << "Board 1" << std::endl;
+
+    for (unsigned int row_index = 0; row_index < NUMBER_OF_ROWS; row_index++)
+    {
+        for (unsigned int column_index = 0; column_index < NUMBER_OF_COLUMNS; column_index++)
+        {
+            Game::who square_occupier = board1[row_index][column_index];
+
+            switch (square_occupier)
+            {
+                case Game::who::COMPUTER:
+                    std::cout << std::setw(NUMBER_OF_COLUMNS) << computer_player_representation;
+                    break;
+
+                case Game::who::HUMAN:
+                    std::cout << std::setw(NUMBER_OF_COLUMNS) << human_player_representation;
+                    break;
+
+                case Game::who::NEUTRAL:
+                    std::cout << std::setw(NUMBER_OF_COLUMNS) << "•";
+                    break;
+            }
+        }
+    }
+
 
 }
 
@@ -326,6 +353,10 @@ void TicTacTwo::make_move(const std::string &move)
     auto [row, column] = convert_move_input_to_coordinates(move);
 
     board1[row][column] = next_mover();
+
+    auto second_board_coordinates = convert_coordinates_from_first_board_to_second_board(row, column);
+
+    board2[second_board_coordinates.first][second_board_coordinates.second] = next_mover();
 
     Game::make_move(move);
 

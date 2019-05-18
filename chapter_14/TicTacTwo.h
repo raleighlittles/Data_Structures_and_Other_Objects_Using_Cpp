@@ -50,6 +50,8 @@ public:
     static const int NUMBER_OF_ROWS = 4;
     static const int NUMBER_OF_COLUMNS = 4;
     static const int BOARD_DIMENSIONS = 2;
+    inline static const std::string human_player_representation = "X";
+    inline static const std::string computer_player_representation = "O";
     /* 2-dimensional array to store 1st board information. */
     std::array<std::array<Game::who, NUMBER_OF_COLUMNS>, NUMBER_OF_ROWS> board1;
     /* 2-dimensional array to store 2nd board information. */
@@ -106,6 +108,16 @@ private:
     std::pair<unsigned int, unsigned int> convert_move_input_to_coordinates(const std::string& space_separated_move) const;
 
     std::pair<unsigned int, unsigned int> convert_coordinates_from_first_board_to_second_board(unsigned int row, unsigned int column);
+
+    // Functions specifically for searching for best move
+
+    std::pair<unsigned int, unsigned int> minimax();
+
+    int maximum_search(int level, int alpha, int beta);
+
+    int minimum_search(int level, int alpha, int beta);
+
+
 
 
 };
