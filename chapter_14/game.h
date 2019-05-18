@@ -34,13 +34,13 @@ protected:
 
     virtual std::string get_user_move() const;
 
-    virtual who last_mover() const;
+    virtual who last_mover() const { return (move_number % 2 == 1 ? who::HUMAN : who::COMPUTER); }
 
-    virtual int moves_completed() const;
+    virtual int moves_completed() const { return move_number; }
 
-    virtual who next_mover() const;
+    virtual who next_mover() const { return (move_number % 2 == 0 ? who::HUMAN : who::COMPUTER); }
 
-    virtual who opposite(who player) const;
+    virtual who opposite(who player) const { return (player == who::HUMAN) ? who::COMPUTER : who::HUMAN; }
 
     virtual who winning() const;
 
@@ -73,6 +73,14 @@ protected:
 
 private:
     int move_number; // Number of moves made so far
+
+    // STATIC MEMBER CONSTANT
+    static const int SEARCH_LEVELS = 4;  // Levels for look-ahead evaluation
+
+    // PRIVATE FUNCTIONS (these are the same for every game)
+    int eval_with_lookahead(int look_ahead, int beat_this);
+    void make_computer_move( );
+    void make_human_move( );
 };
 
 #endif //CHAPTER_14_GAME_H
