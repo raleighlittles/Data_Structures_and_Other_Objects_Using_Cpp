@@ -1,14 +1,9 @@
-//
-// Created by raleigh on 1/4/19.
-//
-
 #ifndef CHAPTER_14_TICTACTWO_H
 #define CHAPTER_14_TICTACTWO_H
 
-#include <iostream>
-#include <type_traits>
-#include <utility>
-#include <algorithm>
+#include <array>
+#include <string>
+#include <queue>
 
 #include "game.h"
 #include "boost/multi_array.hpp"
@@ -54,6 +49,7 @@ class TicTacTwo : public Game
 public:
     static const int NUMBER_OF_ROWS = 4;
     static const int NUMBER_OF_COLUMNS = 4;
+    static const int BOARD_DIMENSIONS = 2;
     /* 2-dimensional array to store 1st board information. */
     std::array<std::array<Game::who, NUMBER_OF_COLUMNS>, NUMBER_OF_ROWS> board1;
     /* 2-dimensional array to store 2nd board information. */
@@ -96,13 +92,20 @@ protected:
 private:
     // Helper functions
 
-    std::array<Game::who, NUMBER_OF_ROWS> get_row(uint row_index);
+    auto get_row(uint row_index) const;
 
-    std::array<Game::who, NUMBER_OF_COLUMNS> get_column(uint column_index);
+    auto get_column(uint column_index) const;
 
-    std::array<Game::who, NUMBER_OF_COLUMNS> get_diagonal();
+    auto get_diagonal() const;
+
+    bool is_section_won(std::pair<std::array<Game::who, NUMBER_OF_COLUMNS>,
+            std::array<Game::who, NUMBER_OF_COLUMNS>>  section) const;
 
     void neutralize_boards();
+
+    std::pair<unsigned int, unsigned int> convert_move_input_to_coordinates(const std::string& space_separated_move) const;
+
+    std::pair<unsigned int, unsigned int> convert_coordinates_from_first_board_to_second_board(unsigned int row, unsigned int column);
 
 
 };
