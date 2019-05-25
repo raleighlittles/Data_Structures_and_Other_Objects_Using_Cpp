@@ -261,9 +261,18 @@ std::pair<int, int> TicTacTwo::score_boards(board_type board1, board_type board2
         if (is_section_empty(row.first)) { first_board_score++; }
         if (is_section_empty(row.second)) { second_board_score++; }
 
-        
+        if !(is_more_than_one_player_in_section(row.first))
+        {
+            // score the row
+        }
+
 
     }
+
+    // Repeat this for columns
+
+
+    // Repeat this for diagonals
 
 }
 
