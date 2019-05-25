@@ -121,7 +121,9 @@ private:
     std::pair<int, int> score_boards(board_type board1, board_type board2) const;
 
     /* Remember that if a section contains more than one player in that section, its unwinnable */
-    bool is_more_than_one_player_in_section(std::array<Game::who, NUMBER_OF_ROWS>);
+    bool is_more_than_one_player_in_section(std::array<Game::who, NUMBER_OF_ROWS> section) const;
+
+    bool is_section_empty(std::array<Game::who, NUMBER_OF_ROWS> section) const;
 
 
 

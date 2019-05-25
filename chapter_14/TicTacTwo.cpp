@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <sstream>
 #include <iomanip>
+#include <set>
 
 
 #include "TicTacTwo.h"
@@ -92,12 +93,12 @@ bool TicTacTwo::is_section_won(std::pair<std::array<Game::who, NUMBER_OF_COLUMNS
     return std::all_of(section.first.begin(), section.first.end(),
                        [&](auto element)
                        {
-                           return element == section.first.front();
+                           return (element == section.first.front()) && (element != Game::who::NEUTRAL);
                        }) and
            std::all_of(section.second.begin(), section.second.end(),
                        [&](auto element)
                        {
-                           return element == section.second.back();
+                           return (element == section.second.back()) && (element != Game::who::NEUTRAL);
                        });
 }
 
@@ -250,12 +251,42 @@ TicTacTwo::coordinate_type TicTacTwo::minimax(TicTacTwo::board_type board1, TicT
 std::pair<int, int> TicTacTwo::score_boards(board_type board1, board_type board2) const
 {
 
+    size_t first_board_score = 0;
+    size_t second_board_score = 0;
+
     for (unsigned int row_index = 0; row_index < NUMBER_OF_ROWS; row_index++)
     {
         auto row = get_row(row_index);
 
+        if (is_section_empty(row.first)) { first_board_score++; }
+        if (is_section_empty(row.second)) { second_board_score++; }
+
+        
 
     }
+
+}
+
+bool TicTacTwo::is_more_than_one_player_in_section(std::array<Game::who, NUMBER_OF_ROWS> section) const
+{
+    std::set section_as_set(std::begin(section), std::end(section));
+
+    section_as_set.erase(Game::who::NEUTRAL);
+
+    return (section_as_set.size() > 1);
+
+}
+
+bool TicTacTwo::is_section_empty(std::array<Game::who, 4> section) const
+{
+    /* Make sure all elements in the section are the same and they're equal to Neutral. */
+    return std::all_of(section.begin(), section.end(),
+                       [&](auto element)
+                       {
+                           return (element == section.front()) && (element == Game::who::NEUTRAL);
+                       });
+
+
 
 }
 
