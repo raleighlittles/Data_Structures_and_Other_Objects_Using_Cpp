@@ -43,20 +43,33 @@ auto TicTacTwo::get_column(uint column_index) const
 
 
 /**
- * @brief Returns a pair of arrays, representing the diagonal of the first and second boards.
+ * @brief Returns a pair of arrays, representing the diagonal requested of the first and second boards.
+ *
+ * @param diagonal_index[in] 0 represents the main diagonal, 1 represents the secondary diagonal
+ *
  * @return
  */
-auto TicTacTwo::get_diagonal() const
+auto TicTacTwo::get_diagonal(uint diagonal_index) const
 { // Remember diagonal entries in a square matrix are entries such that the row and column are the same.
+
+    assert(diagonal_index == 0 || diagonal_index == 1);
 
     std::array<Game::who, NUMBER_OF_ROWS> diagonal_of_first_board;
     std::array<Game::who, NUMBER_OF_ROWS> diagonal_of_second_board;
 
-    for (unsigned int index = 0; index < NUMBER_OF_ROWS; index++)
-    {
-        diagonal_of_first_board[index] = board1[index][index];
-        diagonal_of_second_board[index] = board2[index][index];
-    }
+
+        for (unsigned int index = 0; index < NUMBER_OF_ROWS; index++) {
+            if (diagonal_index == 0) {
+                diagonal_of_first_board[index] = board1[index][index];
+                diagonal_of_second_board[index] = board2[index][index];
+            }
+
+            else
+            {
+                diagonal_of_first_board[index] = board1[index][NUMBER_OF_ROWS - index];
+                diagonal_of_second_board[index] = board2[index][NUMBER_OF_ROWS - index];
+            }
+        }
 
     return std::make_pair(diagonal_of_first_board, diagonal_of_second_board);
 }
@@ -205,6 +218,43 @@ std::pair<unsigned int, unsigned int> TicTacTwo::convert_coordinates_from_first_
 
             exit(1);
         }
+    }
+
+}
+
+TicTacTwo::coordinate_type TicTacTwo::minimax(TicTacTwo::board_type board1, TicTacTwo::board_type board2,
+                                    Game::who player,
+                                   unsigned int depth, int alpha, int beta)
+{
+
+    if ((depth == 0) or (is_game_over()))
+    {
+
+    }
+}
+
+/**
+ *  Return the score for both boards as a pair.
+ *
+ * Rules:
+ *
+ *  For each section*, if there are both X and O, then the score for that row/column is 0.
+ *
+ *  If the whole section is empty, the score for that section is 1.
+ *
+ *  If the board is only occupied by one player, and the player occupies n slots, then the score for that section is 10^n.
+ *
+ * Each section can be a row, column, or diagonal. In the case of a 4x4 board, there are exactly 10 sections.
+ *
+ */
+std::pair<int, int> TicTacTwo::score_boards(board_type board1, board_type board2) const
+{
+
+    for (unsigned int row_index = 0; row_index < NUMBER_OF_ROWS; row_index++)
+    {
+        auto row = get_row(row_index);
+
+
     }
 
 }

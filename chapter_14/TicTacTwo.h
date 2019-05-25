@@ -52,10 +52,15 @@ public:
     static const int BOARD_DIMENSIONS = 2;
     inline static const std::string human_player_representation = "X";
     inline static const std::string computer_player_representation = "O";
+
+    using board_type = std::array<std::array<Game::who, NUMBER_OF_COLUMNS>, NUMBER_OF_ROWS>;
+
+    using coordinate_type = std::pair<unsigned int, unsigned int>;
+
     /* 2-dimensional array to store 1st board information. */
-    std::array<std::array<Game::who, NUMBER_OF_COLUMNS>, NUMBER_OF_ROWS> board1;
+    board_type board1;
     /* 2-dimensional array to store 2nd board information. */
-    std::array<std::array<Game::who, NUMBER_OF_COLUMNS>, NUMBER_OF_ROWS> board2;
+    board_type board2;
 
     // CONSTRUCTOR . Follows convention from connect4.cxx
     TicTacTwo()
@@ -98,24 +103,25 @@ private:
 
     auto get_column(uint column_index) const;
 
-    auto get_diagonal() const;
+    auto get_diagonal(uint diagonal_index) const;
 
     bool is_section_won(std::pair<std::array<Game::who, NUMBER_OF_COLUMNS>,
             std::array<Game::who, NUMBER_OF_COLUMNS>>  section) const;
 
     void neutralize_boards();
 
-    std::pair<unsigned int, unsigned int> convert_move_input_to_coordinates(const std::string& space_separated_move) const;
+    coordinate_type convert_move_input_to_coordinates(const std::string& space_separated_move) const;
 
-    std::pair<unsigned int, unsigned int> convert_coordinates_from_first_board_to_second_board(unsigned int row, unsigned int column);
+    coordinate_type convert_coordinates_from_first_board_to_second_board(unsigned int row, unsigned int column);
 
     // Functions specifically for searching for best move
 
-    std::pair<unsigned int, unsigned int> minimax();
+    coordinate_type minimax(board_type board1, board_type board2, Game::who player, unsigned int depth, int alpha, int beta);
 
-    int maximum_search(int level, int alpha, int beta);
+    std::pair<int, int> score_boards(board_type board1, board_type board2) const;
 
-    int minimum_search(int level, int alpha, int beta);
+    /* Remember that if a section contains more than one player in that section, its unwinnable */
+    bool is_more_than_one_player_in_section(std::array<Game::who, NUMBER_OF_ROWS>);
 
 
 
