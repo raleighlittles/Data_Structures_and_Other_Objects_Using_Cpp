@@ -223,6 +223,13 @@ std::pair<unsigned int, unsigned int> TicTacTwo::convert_coordinates_from_first_
 
 }
 
+/* Psuedocode:
+ *    function minimax(position, depth, alpha, beta, maximizingPlayer)
+ *            if (depth == 0) or game over in position
+ *               return static evaluation of position
+ *
+ *
+ */
 TicTacTwo::coordinate_type TicTacTwo::minimax(TicTacTwo::board_type board1, TicTacTwo::board_type board2,
                                     Game::who player,
                                    unsigned int depth, int alpha, int beta)
@@ -248,31 +255,107 @@ TicTacTwo::coordinate_type TicTacTwo::minimax(TicTacTwo::board_type board1, TicT
  * Each section can be a row, column, or diagonal. In the case of a 4x4 board, there are exactly 10 sections.
  *
  */
-std::pair<int, int> TicTacTwo::score_boards(board_type board1, board_type board2) const
+std::pair<int, int> TicTacTwo::score_boards(board_type board1, board_type board2, Game::who player) const
 {
+    // TODO: Refactor this. Don't have two for loops for columns and rows
 
     size_t first_board_score = 0;
     size_t second_board_score = 0;
 
     for (unsigned int row_index = 0; row_index < NUMBER_OF_ROWS; row_index++)
     {
+
+        std::pair<size_t, size_t> current_row_scores;
+
         auto row = get_row(row_index);
 
-        if (is_section_empty(row.first)) { first_board_score++; }
-        if (is_section_empty(row.second)) { second_board_score++; }
+        current_row_scores.first = score_section(row.first, player);
 
-        if !(is_more_than_one_player_in_section(row.first))
+        current_row_scores.second = score_section(row.second, player);
+
+
+        if (current_row_scores.first > first_board_score)
         {
-            // score the row
+            // update the new scores
+        }
+
+        if (current_row_scores.second > second_board_score)
+        {
+            // update the new scores
+        }
+
+
+
+    }
+
+    for (unsigned int column_index = 0; column_index < NUMBER_OF_COLUMNS; column_index++)
+    {
+        std::pair<size_t, size_t> current_column_scores;
+
+        auto column = get_column(column_index);
+
+        current_column_scores.first = score_section(column.first, player);
+
+        current_column_scores.second = score_section(column.second, player);
+
+        if (current_column_scores.first > first_board_score)
+        {
+            // update new scores
+        }
+
+        if (current_column_scores.second > second_board_score)
+        {
+            // update new scores
+        }
+
+    }
+
+    for (unsigned int diagonal_index = 0; diagonal_index < BOARD_DIMENSIONS; diagonal_index++)
+    {
+        std::pair<size_t, size_t> current_diagonal_scores;
+
+        auto diagonal = get_diagonal(diagonal_index);
+
+        current_diagonal_scores.first = score_section(diagonal.first, player);
+
+        current_diagonal_scores.second = score_section(diagonal.second, player);
+
+        if (current_diagonal_scores.first > first_board_score)
+        {
+            // update scores as needed
+        }
+
+        if (current_diagonal_scores.second > second_board_score)
+        {
+            // update scores as needed
         }
 
 
     }
 
-    // Repeat this for columns
 
+    return std::make_pair(first_board_score, second_board_score);
 
-    // Repeat this for diagonals
+}
+
+std::size_t TicTacTwo::score_section(std::array<Game::who, NUMBER_OF_ROWS> section, Game::who player) const
+{
+
+    if (is_more_than_one_player_in_section(section))
+    {
+        return 0;
+    }
+
+    else if (is_section_empty(section))
+    {
+        return 1;
+
+    }
+
+    else
+    {
+        return static_cast<size_t>(std::count(section.begin(), section.end(), player));
+    }
 
 }
 

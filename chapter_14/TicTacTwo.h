@@ -118,12 +118,15 @@ private:
 
     coordinate_type minimax(board_type board1, board_type board2, Game::who player, unsigned int depth, int alpha, int beta);
 
-    std::pair<int, int> score_boards(board_type board1, board_type board2) const;
+    std::pair<int, int> score_boards(board_type board1, board_type board2, Game::who player) const;
 
     /* Remember that if a section contains more than one player in that section, its unwinnable */
     bool is_more_than_one_player_in_section(std::array<Game::who, NUMBER_OF_ROWS> section) const;
 
     bool is_section_empty(std::array<Game::who, NUMBER_OF_ROWS> section) const;
+
+
+    std::size_t score_section(std::array<Game::who, NUMBER_OF_ROWS> section, Game::who player) const;
 
 
 
