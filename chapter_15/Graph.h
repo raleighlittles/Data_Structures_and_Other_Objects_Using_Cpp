@@ -21,6 +21,7 @@ public:
 
     explicit Vertex(const std::size_t& id, const std::string& label = "")
         : id(id)
+        , label(label)
     {
 
     }
@@ -79,6 +80,24 @@ public:
 
             }
         }
+    }
+
+    /**
+     * @brief Implements Prim's algorithm to compute the MST.
+     * @details Psuedocode:
+     *
+     *      Pick any vertex in the graph, at random, this will be a starting vertex s.
+     *      Create a set of visited vertices, called V, and create a set of vertices remaining, called Q.
+     *      Initially, V is empty, and Q contains all vertices in the graph.
+     *
+     *      From s, travel along the edge with the lowest cost. Once you reach the first vertex on that edge (say s1), add it, and the starting vertex to V,
+     *      and remove them from Q.
+     *
+     *      Now V contains two vertices, s and s1. Repeat the process until Q is empty.
+     */
+    Graph get_minimum_spanning_tree()
+    {
+
     }
 
 
