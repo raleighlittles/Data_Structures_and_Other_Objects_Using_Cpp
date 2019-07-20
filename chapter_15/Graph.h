@@ -70,8 +70,9 @@ public:
             adjacency_list[edge.source.id].push_back(std::make_pair(edge.destination, edge.weight));
 
             adjacency_list[edge.destination.id].push_back(std::make_pair(edge.source, edge.weight));
-            // TODO: Define equality operators for Vertex
+
             vertex_set.insert(edge.source);
+            vertex_set.insert(edge.destination);
         }
 
     }
@@ -109,7 +110,7 @@ public:
      *
      *      Now V contains two vertices, s and s1. Repeat the process until Q is empty.
      */
-    Graph get_minimum_spanning_tree()
+    std::vector<Edge> get_minimum_spanning_tree()
     {
 
         std::set<Vertex> V;
@@ -155,20 +156,20 @@ public:
             // Add this best vertex to your set V
             V.insert(bestVertex);
 
-            // Remove this vertex from Q
-            Q.erase(bestVertex);
+            // Remove the current vertex from Q, so that the next time you start this loop you will be on a different vertex
+            Q.erase(current_vertex);
 
             // Add this edge to your edge list to be used for the MST
-            Edge newEdge = {.weight = weight_of_lowest_edge, .source = current_vertex, .destination = bestVertex};
+            Edge new_edge = {.weight = weight_of_lowest_edge, .source = current_vertex, .destination = bestVertex};
 
-            MST_edge_list.push_back(newEdge);
+            MST_edge_list.push_back(new_edge);
 
         }
 
         // By now, you should have added every vertex in your graph to your MST
         // You have a list of edges that comprises the MST, now construct a graph from these edges
 
-        return Graph(MST_edge_list);
+        return MST_edge_list;
     }
 
 
@@ -176,7 +177,6 @@ protected:
    // std::vector<std::vector<std::pair<Vertex, int>>> adjacency_list;
    std::map<std::size_t, std::vector< std::pair<Vertex, int>>> adjacency_list;
     std::set<Vertex> vertex_set;
-    std::size_t number_of_nodes = 0;
 };
 
 

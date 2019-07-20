@@ -2,27 +2,33 @@
 
 #include "Graph.h"
 
-using namespace std;
-
 int main() {
 
-    vector<Edge> edges =
+
+
+    std::vector<Edge> edgesBeforeMst =
             {
-                    // (x, y, w) -> edge from x to y having weight w
-                    {0, Vertex(1), Vertex(6)},
-                    {1, Vertex(2), Vertex(7)},
-                    {2, Vertex(0), Vertex(5)},
-                    {2, Vertex(1), Vertex(4)},
-                    {3, Vertex(2), Vertex(10)},
-                    {4, Vertex(5), Vertex(1)},
-                    {5, Vertex(4), Vertex(3)}
+                    {4, Vertex(0), Vertex(1)},
+                    {8, Vertex(0), Vertex(7)},
+                    {8, Vertex(1), Vertex(2)},
+                    {11, Vertex(1), Vertex(7)},
+                    {7, Vertex(7), Vertex(8)},
+                    {1, Vertex(7), Vertex(6)},
+                    {2, Vertex(2), Vertex(8)},
+                    {6, Vertex(8), Vertex(6)},
+                    {2, Vertex(6), Vertex(5)},
+                    {7, Vertex(2), Vertex(3)},
+                    {4, Vertex(2), Vertex(5)},
+                    {14, Vertex(3), Vertex(5)},
+                    {10, Vertex(5), Vertex(4)},
+                    {9, Vertex(3), Vertex(4)}
             };
 
-    // construct graph
-    Graph graph(edges);
+    Graph beforeMst(edgesBeforeMst);
 
-    // print adjacency list representation of graph
-    graph.printGraph();
+    Graph mst(beforeMst.get_minimum_spanning_tree());
+
+    mst.printGraph();
 
     return 0;
 
